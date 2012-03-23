@@ -143,7 +143,7 @@
 						),
 		);
 		
-		$misc->printTreeXML($servers, $attrs);
+		$misc->printTree($servers, $attrs, 'servers');
 		exit;
 	}
 	
@@ -168,7 +168,7 @@
 			)
 		);
 		
-		$misc->printTreeXML($groups, $attrs);
+		$misc->printTree($groups, $attrs, 'serversgroups');
 		exit;
 	}
 	
