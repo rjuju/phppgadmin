@@ -90,7 +90,7 @@
 		
 		if (isset($conf['srv_groups'])) {
 			$navlinks = array (
-				array (
+				'showall' => array (
 					'attr'=> array ('href' => array ('url' => 'servers.php')),
 					'content' => $lang['strallservers']
 				)
