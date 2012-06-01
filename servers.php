@@ -80,10 +80,10 @@
 				)
 			),
 		);
-		
+
 		if (($group !== false) and isset($conf['srv_groups'][$group])) {
 			printf("<h2>{$lang['strgroupservers']}</h2>", htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8'));
-			$actions['logout']['url'] .= "group=" . htmlentities($group, ENT_COMPAT, 'UTF-8') . "&amp;";
+			$actions['logout']['attr']['href']['urlvars']['group'] = $group;
 		}
 		
 		$misc->printTable($servers, $columns, $actions, 'servers-servers', $lang['strnoobjects'], 'svPre');
