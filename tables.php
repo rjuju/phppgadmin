@@ -738,7 +738,7 @@
 			'table' => array(
 				'title' => $lang['strtable'],
 				'field' => field('relname'),
-				'url'		=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
+				'url'	=> "redirect.php?subject=table&amp;{$misc->href}&amp;",
 				'vars'  => array('table' => 'relname'),
 			),
 			'owner' => array(
@@ -770,66 +770,161 @@
 				'default' => 'analyze',
 			),
 			'browse' => array(
-				'title' => $lang['strbrowse'],
-				'url'   => "display.php?{$misc->href}&amp;subject=table&amp;return=schema&amp;",
-				'vars'  => array('table' => 'relname'),
+				'content' => $lang['strbrowse'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'display.php',
+						'urlvars' => array (
+							'subject' => 'table',
+							'return' => 'schema',
+							'table' => field('relname')
+						)
+					)
+				)
 			),
 			'select' => array(
-				'title' => $lang['strselect'],
-				'url'   => "tables.php?action=confselectrows&amp;{$misc->href}&amp;",
-				'vars'  => array('table' => 'relname'),
+				'content' => $lang['strselect'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array (
+							'action' => 'confselectrows',
+							'table' => field('relname')
+						)
+					)
+				)
 			),
 			'insert' => array(
-				'title' => $lang['strinsert'],
-				'url'   => "tables.php?action=confinsertrow&amp;{$misc->href}&amp;",
-				'vars'  => array('table' => 'relname'),
+				'content' => $lang['strinsert'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array (
+							'action' => 'confinsertrow',
+							'table' => field('relname')
+						)
+					)
+				)
 			),
 			'empty' => array(
-				'title' => $lang['strempty'],
-				'url'   => "tables.php?action=confirm_empty&amp;{$misc->href}&amp;",
-				'vars'  => array('table' => 'relname'),
 				'multiaction' => 'confirm_empty',
+				'content' => $lang['strempty'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array (
+							'action' => 'confirm_empty',
+							'table' => field('relname')
+						)
+					)
+				)
 			),
 			'alter' => array(
-				'title' => $lang['stralter'],
-				'url'	=> "tblproperties.php?action=confirm_alter&amp;{$misc->href}&amp;",
-				'vars'	=> array('table' => 'relname'),
+				'content' => $lang['stralter'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tblproperties.php',
+						'urlvars' => array (
+							'action' => 'confirm_alter',
+							'table' => field('relname')
+						)
+					)
+				)
 			),
 			'drop' => array(
-				'title' => $lang['strdrop'],
-				'url'   => "tables.php?action=confirm_drop&amp;{$misc->href}&amp;",
-				'vars'  => array('table' => 'relname'),
 				'multiaction' => 'confirm_drop',
+				'content' => $lang['strdrop'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array (
+							'action' => 'confirm_drop',
+							'table' => field('relname')
+						)
+					)
+				)
 			),
 			'vacuum' => array(
-				'title' => $lang['strvacuum'],
-				'url'   => "tables.php?action=confirm_vacuum&amp;{$misc->href}&amp;",
-				'vars'  => array('table' => 'relname'),
 				'multiaction' => 'confirm_vacuum',
+				'content' => $lang['strvacuum'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array (
+							'action' => 'confirm_vacuum',
+							'table' => field('relname')
+						)
+					)
+				)
 			),
 			'analyze' => array(
-				'title' => $lang['stranalyze'],
-				'url'   => "tables.php?action=confirm_analyze&amp;{$misc->href}&amp;",
-				'vars'  => array('table' => 'relname'),
 				'multiaction' => 'confirm_analyze',
+				'content' => $lang['stranalyze'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array (
+							'action' => 'confirm_analyze',
+							'table' => field('relname')
+						)
+					)
+				)
 			),
 			'reindex' => array(
-				'title' => $lang['strreindex'],
-				'url'   => "tables.php?action=confirm_reindex&amp;{$misc->href}&amp;",
-				'vars'  => array('table' => 'relname'),
 				'multiaction' => 'confirm_reindex',
-			),
+				'content' => $lang['strreindex'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array (
+							'action' => 'confirm_reindex',
+							'table' => field('relname')
+						)
+					)
+				)
+			)
 			//'cluster' TODO ?
 		);
 
 		if (!$data->hasTablespaces()) unset($columns['tablespace']);
 
-		$misc->printTable($tables, $columns, $actions, $lang['strnotables']);
+		$misc->printTable($tables, $columns, $actions, 'tables-tables', $lang['strnotables']);
 
-		echo "<ul class=\"navlink\">\n\t<li><a href=\"tables.php?action=create&amp;{$misc->href}\">{$lang['strcreatetable']}</a></li>\n";
-		if (($tables->recordCount() > 0) && $data->hasCreateTableLike())
-			echo "\t<li><a href=\"tables.php?action=createlike&amp;{$misc->href}\">{$lang['strcreatetablelike']}</a></li>\n";
-		echo "</ul>\n";
+		$navlinks = array (
+			'create' => array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array (
+							'action' => 'create',
+							'server' => $_REQUEST['server'],
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema']
+						)
+					)
+				),
+				'content' => $lang['strcreatetable']
+			)
+		);
+
+		if (($tables->recordCount() > 0) && $data->hasCreateTableLike()) {
+			$navlinks['createlike'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array (
+							'action' => 'createlike',
+							'server' => $_REQUEST['server'],
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema']
+						)
+					)
+				),
+				'content' => $lang['strcreatetablelike']
+			);
+		}
+
+		$misc->printNavLinks($navlinks, 'tables-tables');
 	}
 	
 	require('./admin.php');
@@ -865,7 +960,7 @@
 						)
 		);
 
-		$misc->printTreeXML($tables, $attrs);
+		$misc->printTree($tables, $attrs, 'tables');
 		exit;
 	}
 
@@ -897,7 +992,7 @@
 			),
 		);
 
-		$misc->printTreeXML($items, $attrs);
+		$misc->printTree($items, $attrs, 'table');
 		exit;
 	}
 

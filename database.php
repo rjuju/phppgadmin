@@ -376,7 +376,7 @@
 		
 		$actions = array();
 		
-		$misc->printTable($variables, $columns, $actions, $lang['strnodata']);
+		$misc->printTable($variables, $columns, $actions, 'database-variables', $lang['strnodata']);
 	}
 
 	/**
@@ -429,7 +429,7 @@
 
 			$actions = array();
 
-			$misc->printTable($prep_xacts, $columns, $actions, $lang['strnodata']);
+			$misc->printTable($prep_xacts, $columns, $actions, 'database-processes-preparedxacts', $lang['strnodata']);
 		}
 
 		// Fetch the processes from the database
@@ -462,14 +462,30 @@
 		if ($data->isSuperUser()) {
 			$actions = array(
 				'cancel' => array(
-					'title' => $lang['strcancel'],
-					'url'   => "database.php?action=signal&amp;signal=CANCEL&amp;{$misc->href}&amp;",
-					'vars'  => array('procpid' => 'procpid')
+					'content' => $lang['strcancel'],
+					'attr'=> array (
+						'href' => array (
+							'url' => 'database.php',
+							'urlvars' => array (
+								'action' => 'signal',
+								'signal' => 'CANCEL',
+								'procpid' => field('procpid')
+							)
+						)
+					)
 				),
 				'kill' => array(
-					'title' => $lang['strkill'],
-					'url'   => "database.php?action=signal&amp;signal=KILL&amp;{$misc->href}&amp;",
-					'vars'  => array('procpid' => 'procpid')
+					'content' => $lang['strkill'],
+					'attr'=> array (
+						'href' => array (
+							'url' => 'database.php',
+							'urlvars' => array (
+								'action' => 'signal',
+								'signal' => 'KILL',
+								'procpid' => field('procpid')
+							)
+						)
+					)
 				)
 			);
 	
@@ -483,7 +499,7 @@
 		// Remove query start time for <7.4
 		if (!isset($processes->fields['query_start'])) unset($columns['start_time']);
 
-		$misc->printTable($processes, $columns, $actions, $lang['strnodata']);
+		$misc->printTable($processes, $columns, $actions, 'database-processes', $lang['strnodata']);
 		
 		if ($isAjax) exit;
 	}
@@ -529,7 +545,7 @@
 		if (!$data->hasVirtualTransactionId()) unset($columns['vxid']);
 
 		$actions = array();
-		$misc->printTable($variables, $columns, $actions, $lang['strnodata']);
+		$misc->printTable($variables, $columns, $actions, 'database-locks', $lang['strnodata']);
 		
 		if ($isAjax) exit;
 	}
@@ -592,7 +608,7 @@
 	}
 
 	function doTree() {
-		global $misc, $data, $lang, $slony;
+		global $misc, $data, $lang;
 
 		$reqvars = $misc->getRequestVars('database');
 
@@ -614,7 +630,7 @@
 						),
 		);
 		
-		$misc->printTreeXML($items, $attrs);
+		$misc->printTree($items, $attrs, 'database');
 
 		exit;
 	}
@@ -628,7 +644,6 @@
 
 	/* normal flow */
 	if ($action == 'locks' or $action == 'processes') {
-		$scripts  = "<script src=\"libraries/js/jquery.js\" type=\"text/javascript\"></script>\n";
 		$scripts .= "<script src=\"js/database.js\" type=\"text/javascript\"></script>";
 
 		$refreshTime = $conf['ajax_refresh'] * 1000;

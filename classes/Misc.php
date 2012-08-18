@@ -49,110 +49,109 @@
 			return htmlentities($href);
 		}
 
-		function getHREFSubject($subject) {
+		function getSubjectParams($subject) {
 
 			$vars = array();
 
 			switch($subject) {
 				case 'root':
-					return 'redirect.php?subject=root';
-					break;
-				case 'server':
 					$vars = array (
-						'server' => $_REQUEST['server'],
-						'subject' => 'server'
+						'params' => array(
+							'subject' => 'root'
+						)
 					);
 					break;
-				case 'report':
-					return 'reports.php?'. http_build_query(array(
+				case 'server':
+					$vars = array ('params' => array(
 						'server' => $_REQUEST['server'],
-						'subject' => 'report',
-						'report' => $_REQUEST['report']
-					), '', '&amp;');
+						'subject' => 'server'
+					));
+					break;
+				case 'report':
+					$vars = array(
+						'url' => 'reports.php',
+						'params' => array(
+							'server' => $_REQUEST['server'],
+							'subject' => 'report',
+							'report' => $_REQUEST['report']
+					));
 					break;
 				case 'role':
-					$vars = array(
+					$vars = array('params' => array(
 						'server' => $_REQUEST['server'],
 						'subject' => 'role',
 						'action' => 'properties',
 						'rolename' => $_REQUEST['rolename']
-					);
+					));
 					break;
 				case 'database':
-					$vars = array(
+					$vars = array('params' => array(
 						'server' => $_REQUEST['server'],
 						'subject' => 'database',
 						'database' => $_REQUEST['database'],
-					);
+					));
 					break;
 				case 'schema':
-					$vars = array(
+					$vars = array('params' => array(
 						'server' => $_REQUEST['server'],
 						'subject' => 'schema',
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema']
-					);
-					break;
-				case 'slony_cluster':
-					$vars = array(
-						'server' => $_REQUEST['server'],
-						'subject' => 'slony_cluster',
-						'database' => $_REQUEST['database'],
-						'schema' => $_REQUEST['schema'],
-						'slony_cluster' => $_REQUEST['slony_cluster']
-					);
+					));
 					break;
 				case 'table':
-					$vars = array(
+					$vars = array('params' => array(
 						'server' => $_REQUEST['server'],
 						'subject' => 'table',
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'table' => $_REQUEST['table']
-					);
+					));
 					break;
 				case 'selectrows':
-					return 'tables.php?'. http_build_query(array(
-						'server' => $_REQUEST['server'],
-						'subject' => 'table',
-						'database' => $_REQUEST['database'],
-						'schema' => $_REQUEST['schema'],
-						'table' => $_REQUEST['table'],
-						'action' => 'confselectrows'
-					), '', '&amp;');
+					$vars = array(
+						'url' => 'tables.php',
+						'params' => array(
+							'server' => $_REQUEST['server'],
+							'subject' => 'table',
+							'database' => $_REQUEST['database'],
+							'schema' => $_REQUEST['schema'],
+							'table' => $_REQUEST['table'],
+							'action' => 'confselectrows'
+					));
 					break;
 				case 'view':
-					$vars = array(
+					$vars = array('params' => array(
 						'server' => $_REQUEST['server'],
 						'subject' => 'view',
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'view' => $_REQUEST['view']
-					);
+					));
 					break;
 				case 'fulltext':
 				case 'ftscfg':
-					$vars = array(
+					$vars = array('params' => array(
 						'server' => $_REQUEST['server'],
 						'subject' => 'fulltext',
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'action' => 'viewconfig',
 						'ftscfg' => $_REQUEST['ftscfg']
-					);
+					));
 					break;
 				case 'function':
-					$vars = array(
+					$vars = array('params' => array(
 						'server' => $_REQUEST['server'],
 						'subject' => 'function',
 						'database' => $_REQUEST['database'],
 						'schema' => $_REQUEST['schema'],
 						'function' => $_REQUEST['function'],
 						'function_oid' => $_REQUEST['function_oid']
-					);
+					));
 					break;
 				case 'aggregate':
-					$vars = array(
+					$vars = array('params' => array(
 						'server' => $_REQUEST['server'],
 						'subject' => 'aggregate',
 						'action' => 'properties',
@@ -160,53 +159,41 @@
 						'schema' => $_REQUEST['schema'],
 						'aggrname' => $_REQUEST['aggrname'],
 						'aggrtype' => $_REQUEST['aggrtype']
-					);
-					break;
-				case 'slony_node':
-					$vars = array(
-						'server' => $_REQUEST['server'],
-						'subject' => 'slony_cluster',
-						'database' => $_REQUEST['database'],
-						'schema' => $_REQUEST['schema'],
-						'no_id' => $_REQUEST['no_id'],
-						'no_name' => $_REQUEST['no_name']
-					);
-					break;
-				case 'slony_set':
-					$vars = array(
-						'server' => $_REQUEST['server'],
-						'subject' => 'slony_set',
-						'database' => $_REQUEST['database'],
-						'schema' => $_REQUEST['schema'],
-						'slony_set_id' => $_REQUEST['slony_set'],
-						'slony_set' => $_REQUEST['slony_set']
-					);
+					));
 					break;
 				case 'column':
 					if (isset($_REQUEST['table']))
-						$vars = array(
+						$vars = array('params' => array(
 							'server' => $_REQUEST['server'],
 							'subject' => 'column',
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
 							'table' => $_REQUEST['table'],
 							'column' => $_REQUEST['column']
-						);
+						));
 					else
-						$vars = array(
+						$vars = array('params' => array(
 							'server' => $_REQUEST['server'],
 							'subject' => 'column',
 							'database' => $_REQUEST['database'],
 							'schema' => $_REQUEST['schema'],
 							'view' => $_REQUEST['view'],
 							'column' => $_REQUEST['column']
-						);
+						));
 					break;
 				default:
 					return false;
 			}
 
-			return 'redirect.php?'. http_build_query($vars, '', '&amp;');
+			if (!isset($vars['url']))
+				$vars['url'] = 'redirect.php';
+
+			return $vars;
+		}
+
+		function getHREFSubject($subject) {
+			$vars = $this->getSubjectParams($subject);
+			return "{$vars['url']}?". http_build_query($vars['params'], '', '&amp;');
 		}
 
 		/**
@@ -372,18 +359,6 @@
 								}
 							}
 						}
-					}
-					break;
-				case 'slonystatus':
-					switch ($str) {
-					case 'insync':
-						$out = $lang['strhealthy'];
-						break;
-					case 'outofsync':
-						$out = $lang['stroutofsync'];
-						break;
-					default:
-						$out = $lang['strunknown'];
 					}
 					break;
 				default:
@@ -557,14 +532,16 @@
 				echo "<head>\n";
 				echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
 				// Theme
-				echo "<link rel=\"stylesheet\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" />\n";
+				echo "<link rel=\"stylesheet\" id=\"csstheme\" href=\"themes/{$conf['theme']}/global.css\" type=\"text/css\" />\n";
 				echo "<link rel=\"shortcut icon\" href=\"images/themes/{$conf['theme']}/Favicon.ico\" type=\"image/vnd.microsoft.icon\" />\n";
 				echo "<link rel=\"icon\" type=\"image/png\" href=\"images/themes/{$conf['theme']}/Introduction.png\" />\n";
+				echo "<script type=\"text/javascript\" src=\"libraries/js/jquery.js\"></script>";
 				echo "<title>", htmlspecialchars($appName);
 				if ($title != '') echo htmlspecialchars(" - {$title}");
 				echo "</title>\n";
 
 				if ($script) echo "{$script}\n";
+				$this->printUpdateBrowserTheme($conf['theme']);
 				echo "</head>\n";
 			}
 		}
@@ -605,6 +582,14 @@
 			}
 		}
 
+		function printUpdateBrowserTheme($theme){
+			echo "<script type=\"text/javascript\">\n";
+			echo "$(\"#csstheme\", window.parent.frames[0].document).attr(\"href\",\"themes/".$theme."/global.css\");\n";
+ //'\"themes/".$theme."/global.css\"');";
+			echo "</script>\n";
+
+		}
+
 		/**
 		 * Outputs JavaScript code that will reload the browser
 		 * @param $database True if dropping a database, false otherwise
@@ -619,8 +604,53 @@
 		}
 
 		/**
+		 * Display a link
+		 * @param $link An associative array of link parameters to print
+		 *     link = array(
+		 *       'attr' => array( // list of A tag attribute
+		 *          'attrname' => attribute value
+		 *          ...
+		 *       ),
+		 *       'content' => The link text
+		 *       'fields' => (optionnal) the data from which content and attr's values are obtained
+		 *     );
+		 *   the special attribute 'href' might be a string or an array. If href is an array it
+		 *   will be generated by getActionUrl. See getActionUrl comment for array format.
+		 */
+		function printLink($link) {
+			$tag = "<a ";
+			foreach ($link['attr'] as $attr => $value) {
+				if ($attr == 'href' and is_array($value)) {
+					$tag.= 'href="'. htmlentities($this->getActionUrl($value, $link['fields'])).'" ';
+				}
+				else {
+					$tag.= htmlentities($attr).'="'. value($value, $link['fields'], 'html') .'" ';
+				}
+			}
+			$tag.= ">". value($link['content'], $link['fields'], 'html') ."</a>\n";
+			echo $tag;
+		}
+
+		/**
+		 * Display a list of links
+		 * @param $links An associative array of links to print. See printLink function for
+		 *               the links array format.
+		 * @param $class An optional class or list of classes seprated by a space
+		 *   WARNING: This field is NOT escaped! No user should be able to inject something here, use with care.
+		 */
+		function printLinksList($links, $class='') {
+			echo "<ul class=\"{$class}\">\n";
+			foreach ($links as $link) {
+				echo "\t<li>";
+				$this->printLink($link);
+				echo "</li>\n";
+			}
+			echo "</ul>\n";
+		}
+
+		/**
 		 * Display navigation tabs
-		 * @param $tabs An associative array of tabs definitions, see printNav() for an example.
+		 * @param $tabs The name of current section (Ex: intro, server, ...), or an array with tabs (Ex: sqledit.php doFind function)
 		 * @param $activetab The name of the tab to be highlighted.
 		 */
 		function printTabs($tabs, $activetab) {
@@ -642,7 +672,7 @@
 
 				if (!isset($tab['hide']) || $tab['hide'] !== true) {
 
-					$tablink = "<a" . $this->printActionUrl($tab, $_REQUEST, 'href') . ">";
+					$tablink = '<a href="' . htmlentities($this->getActionUrl($tab, $_REQUEST)) . '">';
 
 					if (isset($tab['icon']) && $icon = $this->icon($tab['icon']))
 						$tablink .= "<span class=\"icon\"><img src=\"{$icon}\" alt=\"{$tab['title']}\" /></span>";
@@ -671,13 +701,14 @@
 		 * @param $section The name of the tab bar.
 		 */
 		function getNavTabs($section) {
-			global $data, $lang, $conf, $slony;
+			global $data, $lang, $conf, $plugin_manager;
 
 			$hide_advanced = ($conf['show_advanced'] === false);
+			$tabs = array();
 
 			switch ($section) {
 				case 'root':
-					return array (
+					$tabs = array (
 						'intro' => array (
 							'title' => $lang['strintroduction'],
 							'url'   => "intro.php",
@@ -689,11 +720,12 @@
 							'icon'  => 'Servers',
 						),
 					);
+					break;
 
 				case 'server':
 				case 'report':
 					$hide_users = !$data->isSuperUser();
-					$tmp = array (
+					$tabs = array (
 						'databases' => array (
 							'title' => $lang['strdatabases'],
 							'url'   => 'all_db.php',
@@ -703,7 +735,7 @@
 						)
 					);
 					if ($data->hasRoles()) {
-						$tmp = array_merge($tmp, array(
+						$tabs = array_merge($tabs, array(
 							'roles' => array (
 								'title' => $lang['strroles'],
 								'url'   => 'roles.php',
@@ -715,7 +747,7 @@
 						));
 					}
 					else {
-						$tmp = array_merge($tmp, array(
+						$tabs = array_merge($tabs, array(
 							'users' => array (
 								'title' => $lang['strusers'],
 								'url'   => 'users.php',
@@ -735,7 +767,7 @@
 						));
 					}
 
-					$tmp = array_merge($tmp, array(
+					$tabs = array_merge($tabs, array(
 						'account' => array (
 							'title' => $lang['straccount'],
 							'url'   => $data->hasRoles() ? 'roles.php' : 'users.php',
@@ -767,7 +799,6 @@
 							'icon' => 'Reports',
 						),
 					));
-					return $tmp;
 					break;
 				case 'database':
 					$tabs = array (
@@ -849,14 +880,6 @@
 							'help'  => 'pg.cast',
 							'icon'  => 'Casts',
 						),
-						'slony' => array (
-							'title' => 'Slony',
-							'url'   => 'plugin_slony.php',
-							'urlvars' => array('subject' => 'database', 'action' => 'clusters_properties'),
-							'hide'  => !isset($slony),
-							'help'  => '',
-							'icon'  => 'Replication',
-						),
 						'export' => array (
 							'title' => $lang['strexport'],
 							'url'   => 'database.php',
@@ -866,7 +889,7 @@
 							'icon'  => 'Export',
 						),
 					);
-					return $tabs;
+					break;
 
 				case 'schema':
 					$tabs = array (
@@ -971,10 +994,10 @@
 						),
 					);
 					if (!$data->hasFTS()) unset($tabs['fulltext']);
-					return $tabs;
+					break;
 
 				case 'table':
-					return array (
+					$tabs = array (
 						'columns' => array (
 							'title' => $lang['strcolumns'],
 							'url'   => 'tblproperties.php',
@@ -1048,9 +1071,10 @@
 							'hide'	=> false,
 						),
 					);
+					break;
 
 				case 'view':
-					return array (
+					$tabs = array (
 						'columns' => array (
 							'title' => $lang['strcolumns'],
 							'url'   => 'viewproperties.php',
@@ -1087,9 +1111,10 @@
 							'hide'	=> false,
 						),
 					);
+					break;
 
 				case 'function':
-					return array (
+					$tabs = array (
 						'definition' => array (
 							'title' => $lang['strdefinition'],
 							'url'   => 'functions.php',
@@ -1112,9 +1137,10 @@
 							'icon'  => 'Privileges',
 						),
 					);
+					break;
 
 				case 'aggregate':
-					return array (
+					$tabs = array (
 						'definition' => array (
 							'title' => $lang['strdefinition'],
 							'url'   => 'aggregates.php',
@@ -1127,9 +1153,10 @@
 							'icon'  => 'Definition',
 						),
 					);
+					break;
 
 				case 'role':
-					return array (
+					$tabs = array (
 						'definition' => array (
 							'title' => $lang['strdefinition'],
 							'url'   => 'roles.php',
@@ -1141,9 +1168,10 @@
 							'icon'  => 'Definition',
 						),
 					);
+					break;
 
 				case 'popup':
-					return array (
+					$tabs = array (
 						'sql' => array (
 							'title' => $lang['strsql'],
 							'url'   => 'sqledit.php',
@@ -1158,49 +1186,10 @@
 							'icon'  => 'Search',
 						),
 					);
-
-				case 'slony_cluster':
-					return array (
-						'properties' => array (
-							'title' => $lang['strproperties'],
-							'url'   => 'plugin_slony.php',
-							'urlvars' => array(
-									'subject' => 'slony_cluster',
-									'action' => 'cluster_properties',
-									'slony_cluster' => field('slony_cluster')
-								),
-							'help'  => '',
-							'tree'  => false,
-							'icon'  => 'Cluster',
-						),
-						'nodes' => array (
-							'title' => $lang['strnodes'],
-							'url'   => 'plugin_slony.php',
-							'urlvars' => array(
-									'subject' => 'slony_cluster',
-									'action' => 'nodes_properties',
-									'slony_cluster' => field('slony_cluster')
-								),
-							'branch' => 'nodes',
-							'help'  => '',
-							'icon'  => 'Nodes',
-						),
-						'sets' => array (
-							'title' => $lang['strrepsets'],
-							'url'   => 'plugin_slony.php',
-							'urlvars' => array(
-								'subject' => 'slony_cluster',
-								'action' => 'sets_properties',
-								'slony_cluster' => field('slony_cluster')
-							),
-							'branch' => 'sets',
-							'help'  => '',
-							'icon'  => 'ReplicationSets',
-						),
-					);
+					break;
 
 				case 'column':
-					return array(
+					$tabs = array(
 						'properties' => array (
 							'title'		=> $lang['strcolprop'],
 							'url'		=> 'colproperties.php',
@@ -1223,9 +1212,10 @@
 							'icon'  => 'Privileges',
 						)
 					);
+					break;
 
                 case 'fulltext':
-                    return array (
+                    $tabs = array (
                         'ftsconfigs' => array (
                             'title' => $lang['strftstabconfigs'],
                             'url'   => 'fulltext.php',
@@ -1254,10 +1244,17 @@
                             'icon'  => 'FtsParser',
                         ),
                     );
-
-				default:
-					return array();
+                    break;
 			}
+
+			// Tabs hook's place
+			$plugin_functions_parameters = array(
+				'tabs' => &$tabs,
+				'section' => $section
+			);
+			$plugin_manager->do_hook('tabs', $plugin_functions_parameters);
+
+			return $tabs;
 		}
 
 		/**
@@ -1277,40 +1274,122 @@
 		}
 
 		function printTopbar() {
-			global $lang, $conf, $appName, $appVersion, $appLangFiles;
+			global $lang, $conf, $plugin_manager, $appName, $appVersion, $appLangFiles;
 
 			$server_info = $this->getServerInfo();
+			$reqvars = $this->getRequestVars('table');
 
 			echo "<div class=\"topbar\"><table style=\"width: 100%\"><tr><td>";
 
 			if ($server_info && isset($server_info['platform']) && isset($server_info['username'])) {
+				/* top left informations when connected */
 				echo sprintf($lang['strtopbar'],
 					'<span class="platform">'.htmlspecialchars($server_info['platform']).'</span>',
 					'<span class="host">'.htmlspecialchars((empty($server_info['host'])) ? 'localhost':$server_info['host']).'</span>',
 					'<span class="port">'.htmlspecialchars($server_info['port']).'</span>',
 					'<span class="username">'.htmlspecialchars($server_info['username']).'</span>');
-			} else {
-				echo "<span class=\"appname\">$appName</span> <span class=\"version\">$appVersion</span>";
-			}
 
-			echo "</td>";
+				echo "</td>";
 
-			if (isset($_REQUEST['server'])) {
-				$sql_url = "sqledit.php?{$this->href}&amp;action=";
-				$sql_window_id = htmlspecialchars('sqledit:'.$_REQUEST['server']);
-				$history_url = "history.php?{$this->href}&amp;action=pophistory";
-				$history_window_id = htmlspecialchars('history:'.$_REQUEST['server']);
-				$logout_shared = isset($_SESSION['sharedUsername']) ?
-					' onclick="return confirm(\''. $lang['strconfdropcred']. '\')"':
-					'';
+				/* top right informations when connected */
+
+				$toplinks = array (
+					'sql' => array (
+						'attr' => array (
+							'href' => array (
+								'url' => 'sqledit.php',
+								'urlvars' => array_merge($reqvars, array (
+									'action' => 'sql'
+								))
+							),
+							'target' => "sqledit",
+							'id' => 'toplink_sql',
+						),
+						'content' => $lang['strsql']
+					),
+					'history' => array (
+						'attr'=> array (
+							'href' => array (
+								'url' => 'history.php',
+								'urlvars' => array_merge($reqvars, array (
+									'action' => 'pophistory'
+								))
+							),
+							'id' => 'toplink_history',
+						),
+						'content' => $lang['strhistory']
+					),
+					'find' => array (
+						'attr' => array (
+							'href' => array (
+								'url' => 'sqledit.php',
+								'urlvars' => array_merge($reqvars, array (
+									'action' => 'find'
+								))
+							),
+							'target' => "sqledit",
+							'id' => 'toplink_find',
+						),
+						'content' => $lang['strfind']
+					),
+					'logout' => array(
+						'attr' => array (
+							'href' => array (
+								'url' => 'servers.php',
+								'urlvars' => array (
+									'action' => 'logout',
+									'logoutServer' => "{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"
+								)
+							),
+							'id' => 'toplink_logout',
+						),
+						'content' => $lang['strlogout']
+					)
+				);
+
+				// Toplink hook's place
+				$plugin_functions_parameters = array(
+					'toplinks' => &$toplinks
+				);
+
+				$plugin_manager->do_hook('toplinks', $plugin_functions_parameters);
 
 				echo "<td style=\"text-align: right\">";
-				echo "<ul class=\"toplink\">\n\t<li><a class=\"toplink\" href=\"{$sql_url}sql\" target=\"sqledit\" onclick=\"window.open('{$sql_url}sql','{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus(); return false;\">{$lang['strsql']}</a></li>\n";
-				echo "\t<li><a class=\"toplink\" href=\"{$history_url}\" onclick=\"window.open('{$history_url}','{$history_window_id}','toolbar=no,width=800,height=600,resizable=yes,scrollbars=yes').focus(); return false;\">{$lang['strhistory']}</a></li>\n";
-				echo "\t<li><a class=\"toplink\" href=\"{$sql_url}find\" target=\"sqledit\" onclick=\"window.open('{$sql_url}find','{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus(); return false;\">{$lang['strfind']}</a></li>\n";
- 				echo "\t<li><a class=\"toplink\" href=\"servers.php?action=logout&amp;logoutServer=".htmlspecialchars($server_info['host']).":".htmlspecialchars($server_info['port']).":".htmlspecialchars($server_info['sslmode'])."\"{$logout_shared}>{$lang['strlogout']}</a></li>\n";
- 				echo "</ul>\n";
+				$this->printLinksList($toplinks, 'toplink');
 				echo "</td>";
+
+				$sql_window_id = htmlentities('sqledit:'.$_REQUEST['server']);
+				$history_window_id = htmlentities('history:'.$_REQUEST['server']);
+
+				echo "<script type=\"text/javascript\">
+						$('#toplink_sql').click(function() {
+							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+							return false;
+						});
+
+						$('#toplink_history').click(function() {
+							window.open($(this).attr('href'),'{$history_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+							return false;
+						});
+
+						$('#toplink_find').click(function() {
+							window.open($(this).attr('href'),'{$sql_window_id}','toolbar=no,width=700,height=500,resizable=yes,scrollbars=yes').focus();
+							return false;
+						});
+						";
+
+				if (isset($_SESSION['sharedUsername'])) {
+					printf("
+						$('#toplink_logout').click(function() {
+							return confirm('%s');
+						});", str_replace("'", "\'", $lang['strconfdropcred']));
+				}
+
+				echo "
+				</script>";
+			}
+			else {
+				echo "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
 			}
 /*
 			echo "<td style=\"text-align: right; width: 1%\">";
@@ -1388,7 +1467,7 @@
 		 * @param $object The type of object at the end of the trail.
 		 */
 		function getTrail($subject = null) {
-			global $lang, $conf, $data, $appName;
+			global $lang, $conf, $data, $appName, $plugin_manager;
 
 			$trail = array();
 			$vars = '';
@@ -1453,17 +1532,6 @@
 			}
 			if ($subject == 'schema') $done = true;
 
-			if (isset($_REQUEST['slony_cluster']) && !$done) {
-				$trail['slony_cluster'] = array(
-					'title' => 'Slony Cluster',
-					'text'  => $_REQUEST['slony_cluster'],
-					'url'   => $this->getHREFSubject('slony_cluster'),
-					'help'  => 'sl.cluster',
-					'icon'  => 'Cluster'
-				);
-			}
-			if ($subject == 'slony_cluster') $done = true;
-
 			if (isset($_REQUEST['table']) && !$done) {
 				$trail['table'] = array(
 					'title' => $lang['strtable'],
@@ -1511,22 +1579,6 @@
 							'icon'  => 'Aggregate'
 						);
 						break;
-					case 'slony_node':
-						$trail[$subject] = array(
-							'title' => 'Slony Node',
-							'text'  => $_REQUEST['no_name'],
-							'help'  => 'sl.'.$subject,
-							'icon'  => 'Node'
-						);
-						break;
-					case 'slony_set':
-						$trail[$subject] = array(
-							'title' => $lang['str'.$subject],
-							'text'  => $_REQUEST[$subject],
-							'help'  => 'sl.'.$subject,
-							'icon'  => 'AvailableReplicationSet'
-						);
-						break;
 					case 'column':
 						$trail['column'] = array (
 							'title' => $lang['strcolumn'],
@@ -1554,8 +1606,39 @@
 				}
 			}
 
+			// Trail hook's place
+			$plugin_functions_parameters = array(
+				'trail' => &$trail,
+				'section' => $subject
+			);
+
+			$plugin_manager->do_hook('trail', $plugin_functions_parameters);
+
 			return $trail;
 		}
+
+		/**
+		* Display the navlinks
+		*
+		* @param $navlinks - An array with the the attributes and values that will be shown. See printLinksList for array format.
+		* @param $place - Place where the $navlinks are displayed. Like 'display-browse', where 'display' is the file (display.php)
+		* and 'browse' is the place inside that code (doBrowse).
+		*/
+		function printNavLinks($navlinks=array(), $place) {
+			global $plugin_manager;
+
+			// Navlinks hook's place
+			$plugin_functions_parameters = array(
+				'navlinks' => &$navlinks,
+				'place' => $place
+			);
+			$plugin_manager->do_hook('navlinks', $plugin_functions_parameters);
+
+			if (count($navlinks) > 0) {
+				$this->printLinksList($navlinks, 'navlink');
+			}
+		}
+
 
 		/**
 		 * Do multi-page navigation.  Displays the prev, next and page options.
@@ -1688,17 +1771,15 @@
 		}
 
 		/**
-		 * Display a URL given an action associative array.
+		 * Returns URL given an action associative array.
+		 * NOTE: this function does not html-escape, only url-escape
 		 * @param $action An associative array of the follow properties:
 		 *			'url'  => The first part of the URL (before the ?)
 		 *			'urlvars' => Associative array of (URL variable => field name)
 		 *						these are appended to the URL
-		 *			'urlfn' => Function to apply to URL before display
 		 * @param $fields Field data from which 'urlfield' and 'vars' are obtained.
-		 * @param $attr If supplied then the URL will be quoted and prefixed with
-		 *				'$attr='.
 		 */
-		function printActionUrl(&$action, &$fields, $attr = null) {
+		function getActionUrl(&$action, &$fields) {
 			$url = value($action['url'], $fields);
 
 			if ($url === false) return '';
@@ -1709,15 +1790,18 @@
 				$urlvars = array();
 			}
 
-			if (isset($urlvars['subject'])) {
+			/* set server, database and schema parameter if not presents */
+			if (isset($urlvars['subject']))
 				$subject = value($urlvars['subject'], $fields);
-				if (isset($_REQUEST['server']) && $subject != 'root') {
-					$urlvars['server'] = $_REQUEST['server'];
-					if (isset($_REQUEST['database']) && $subject != 'server') {
-						$urlvars['database'] = $_REQUEST['database'];
-						if (isset($_REQUEST['schema']) && $subject != 'database') {
-							$urlvars['schema'] = $_REQUEST['schema'];
-						}
+			else
+				$subject = '';
+			
+			if (isset($_REQUEST['server']) and !isset($urlvars['server']) and $subject != 'root') {
+				$urlvars['server'] = $_REQUEST['server'];
+				if (isset($_REQUEST['database']) and !isset($urlvars['database']) and $subject != 'server') {
+					$urlvars['database'] = $_REQUEST['database'];
+					if (isset($_REQUEST['schema']) and !isset($urlvars['schema']) and $subject != 'database') {
+						$urlvars['schema'] = $_REQUEST['schema'];
 					}
 				}
 			}
@@ -1728,12 +1812,7 @@
 				$sep = '&';
 			}
 
-			$url = htmlentities($url, ENT_QUOTES, 'UTF-8');
-
-			if ($attr !== null && $url != '')
-				return ' '.$attr.'="'.$url.'"';
-			else
-				return $url;
+			return $url;
 		}
 
 		function getRequestVars($subject = '') {
@@ -1789,6 +1868,8 @@
 		 *										Add this action to the multi action form
 		 *				), ...
 		 *			);
+		 * @param $place     Place where the $actions are displayed. Like 'display-browse', where 'display' is the file (display.php)
+		 *                   and 'browse' is the place inside that code (doBrowse).
 		 * @param $nodata    (optional) Message to display if data set is empty.
 		 * @param $pre_fn    (optional) Name of a function to call for each row,
 		 *					 it will be passed two params: $rowdata and $actions,
@@ -1799,8 +1880,15 @@
 		 *					 The function must not must not store urls because
 		 *					 they are relative and won't work out of context.
 		 */
-		function printTable(&$tabledata, &$columns, &$actions, $nodata = null, $pre_fn = null) {
-			global $data, $conf, $misc, $lang;
+		function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = null, $pre_fn = null) {
+			global $data, $conf, $misc, $lang, $plugin_manager;
+
+			// Action buttons hook's place
+			$plugin_functions_parameters = array(
+				'actionbuttons' => &$actions,
+				'place' => $place
+			);
+			$plugin_manager->do_hook('actionbuttons', $plugin_functions_parameters);
 
 			if ($has_ma = isset($actions['multiactions']))
 				$ma = $actions['multiactions'];
@@ -1878,12 +1966,9 @@
 										echo "<td></td>\n";
 									} else {
 										echo "<td class=\"opbutton{$id}\">";
-										echo "<a href=\"{$action['url']}";
-										if ($action['url'] === '') echo '?';
-										$misc->printUrlVars($action['vars'], $tabledata->fields);
-										if (isset($action['target']))
-											echo "\" target=\"{$action['target']}";
-										echo "\">{$action['title']}</a></td>\n";
+										$action['fields'] = $tabledata->fields;
+										$this->printLink($action);
+										echo "</td>\n";
 									}
 								}
 								break;
@@ -1934,7 +2019,7 @@
 						echo "\t\t<option value=\"\">--</option>\n";
 					foreach($actions as $k => $a)
 						if (isset($a['multiaction']))
-							echo "\t\t<option value=\"{$a['multiaction']}\"", ($ma['default']  == $k? ' selected="selected"': ''), ">{$a['title']}</option>\n";
+							echo "\t\t<option value=\"{$a['multiaction']}\"", ($ma['default']  == $k? ' selected="selected"': ''), ">{$a['content']}</option>\n";
 					echo "\t</select>\n";
 					echo "<input type=\"submit\" value=\"{$lang['strexecute']}\" />\n";
 					echo $misc->form;
@@ -1965,24 +2050,56 @@
 		 *        'branch' - URL for child nodes (tree XML)
 		 *        'expand' - the action to return XML for the subtree
 		 *        'nodata' - message to display when node has no children
-		 *        'nohead' - suppress headers and opening <tree> tag
-		 *        'nofoot' - suppress closing </tree> tag
+		 * @param $section The section where the branch is linked in the tree
+		 */
+		function printTree(&$_treedata, &$attrs, $section) {
+			global $plugin_manager;
+
+			$treedata = array();
+
+			if ($_treedata->recordCount() > 0) {
+				while (!$_treedata->EOF) {
+					$treedata[] = $_treedata->fields;
+					$_treedata->moveNext();
+				}
+			}
+
+			$tree_params = array(
+				'treedata' => &$treedata,
+				'attrs' => &$attrs,
+				'section' => $section
+			);
+
+			$plugin_manager->do_hook('tree', $tree_params);
+
+			$this->printTreeXML($treedata, $attrs);
+		}
+
+		/** Produce XML data for the browser tree
+		 * @param $treedata A set of records to populate the tree.
+		 * @param $attrs Attributes for tree items
+		 *        'text' - the text for the tree node
+		 *        'icon' - an icon for node
+		 *        'openIcon' - an alternative icon when the node is expanded
+		 *        'toolTip' - tool tip text for the node
+		 *        'action' - URL to visit when single clicking the node
+		 *        'iconAction' - URL to visit when single clicking the icon node
+		 *        'branch' - URL for child nodes (tree XML)
+		 *        'expand' - the action to return XML for the subtree
+		 *        'nodata' - message to display when node has no children
 		 */
 		function printTreeXML(&$treedata, &$attrs) {
 			global $conf, $lang;
 
-			if (!isset($attrs['nohead']) || $attrs['nohead'] === false) {
-				header("Content-Type: text/xml; charset=UTF-8");
-				header("Cache-Control: no-cache");
+			header("Content-Type: text/xml; charset=UTF-8");
+			header("Cache-Control: no-cache");
 
-				echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
+			echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
 
-				echo "<tree>\n";
-			}
+			echo "<tree>\n";
 
-			if ($treedata->recordCount() > 0) {
-				while (!$treedata->EOF) {
-					$rec =& $treedata->fields;
+			if (count($treedata) > 0) {
+				foreach($treedata as $rec) {
 
 					echo "<tree";
 					echo value_xml_attr('text', $attrs['text'], $rec);
@@ -2001,17 +2118,13 @@
 					echo value_xml_attr('tooltip', $attrs['toolTip'], $rec);
 
 					echo " />\n";
-
-					$treedata->moveNext();
 				}
 			} else {
 				$msg = isset($attrs['nodata']) ? $attrs['nodata'] : $lang['strnoobjects'];
 				echo "<tree text=\"{$msg}\" onaction=\"tree.getSelected().getParent().reload()\" icon=\"", $this->icon('ObjectNotFound'), "\" />\n";
 			}
 
-			if (!isset($attrs['nofoot']) || $attrs['nofoot'] === false) {
-				echo "</tree>\n";
-			}
+			echo "</tree>\n";
 		}
 
 		function adjustTabsForTree(&$tabs) {
@@ -2026,13 +2139,21 @@
 		}
 
 		function icon($icon) {
-			global $conf;
-			$path = "images/themes/{$conf['theme']}/{$icon}";
-			if (file_exists($path.'.png')) return $path.'.png';
-			if (file_exists($path.'.gif')) return $path.'.gif';
-			$path = "images/themes/default/{$icon}";
-			if (file_exists($path.'.png')) return $path.'.png';
-			if (file_exists($path.'.gif')) return $path.'.gif';
+			if (is_string($icon)) {
+				global $conf;
+				$path = "images/themes/{$conf['theme']}/{$icon}";
+				if (file_exists($path.'.png')) return $path.'.png';
+				if (file_exists($path.'.gif')) return $path.'.gif';
+				$path = "images/themes/default/{$icon}";
+				if (file_exists($path.'.png')) return $path.'.png';
+				if (file_exists($path.'.gif')) return $path.'.gif';
+			}
+			else {
+				// Icon from plugins
+				$path = "plugins/{$icon[0]}/images/{$icon[1]}";
+				if (file_exists($path.'.png')) return $path.'.png';
+				if (file_exists($path.'.gif')) return $path.'.gif';
+			}
 			return '';
 		}
 
@@ -2389,7 +2510,6 @@
 
 				$fksprops['code'] .= '<div id="fkbg"></div>';
 				$fksprops['code'] .= '<div id="fklist"></div>';
-				$fksprops['code'] .= '<script src="libraries/js/jquery.js" type="text/javascript"></script>';
 				$fksprops['code'] .= '<script src="js/ac_insert_row.js" type="text/javascript"></script>';
 			}
 

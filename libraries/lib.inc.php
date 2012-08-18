@@ -114,6 +114,17 @@
 	if (!isset($_theme) && isset($_COOKIE['ppaTheme']) && is_file("./themes/{$_COOKIE['ppaTheme']}/global.css")) {
 		$conf['theme']  = $_COOKIE['ppaTheme'];
 	}
+	// 4. Check for theme by server/db/user
+	$info = $misc->getServerInfo();
+
+	if (!is_null($info)){
+		if ( (isset($info['theme']['default'])) && is_file("./themes/{$_COOKIE['ppaTheme']}/global.css") )
+			$conf['theme'] = $info['theme']['default'];
+		if( (isset($_REQUEST['database'])) && (isset($info['theme']['db'][$_REQUEST['database']])) && is_file("./themes/{$_COOKIE['ppaTheme']}/global.css"))
+			$conf['theme'] = $info['theme']['db'][$_REQUEST['database']];
+		if ( (isset($info['username'])) && (isset($info['theme']['user'][$info['username']])) && is_file("./themes/{$_COOKIE['ppaTheme']}/global.css") )
+			$conf['theme'] = $info['theme']['user'][$info['username']];
+	}
 
 	// Determine language file to import:
 	unset($_language);
@@ -180,6 +191,10 @@
 		exit;
 	}
 
+	// Manage the plugins
+	require_once('./classes/PluginManager.php');
+	$plugin_manager = new PluginManager($_language);
+
 	// Create data accessor object, if necessary
 	if (!isset($_no_db_connection)) {
 		if (!isset($_REQUEST['server'])) {
@@ -218,12 +233,6 @@
 				echo $lang['strbadschema'];
 				exit;
 			}
-		}
-
-		// Load Slony if required
-		if (isset($_server_info['slony_support']) && $_server_info['slony_support']) {
-			include('./classes/plugins/Slony.php');
-			$slony = new Slony();
 		}
 	}
 

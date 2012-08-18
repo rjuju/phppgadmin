@@ -413,7 +413,7 @@
 	 * Displays requested data
 	 */
 	function doBrowse($msg = '') {
-		global $data, $conf, $misc, $lang;
+		global $data, $conf, $misc, $lang, $plugin_manager;
 
 		$save_history = false;
 		// If current page is not set, default to first page
@@ -504,10 +504,32 @@
 		if (isset($_REQUEST['return'])) $gets .= "&amp;return=" . urlencode($_REQUEST['return']);
 		if (isset($_REQUEST['search_path'])) $gets .= "&amp;search_path=" . urlencode($_REQUEST['search_path']);
 		if (isset($_REQUEST['table'])) $gets .= "&amp;table=" . urlencode($_REQUEST['table']);
-		
+
+		// Build strings for GETs in array
+		$_gets = array(
+			'server' => $_REQUEST['server'],
+			'database' => $_REQUEST['database']
+		);
+
+		if (isset($_REQUEST['schema'])) $_gets['schema'] = $_REQUEST['schema'];
+		if (isset($object)) $_gets[$subject] = $object;
+		if (isset($subject)) $_gets['subject'] = $subject;
+		if (isset($_REQUEST['query'])) $_gets['query'] = $_REQUEST['query'];
+		if (isset($_REQUEST['report'])) $_gets['report'] = $_REQUEST['report'];
+		if (isset($_REQUEST['count'])) $_gets['count'] = $_REQUEST['count'];
+		if (isset($_REQUEST['return'])) $_gets['return'] = $_REQUEST['return'];
+		if (isset($_REQUEST['search_path'])) $_gets['search_path'] = $_REQUEST['search_path'];
+		if (isset($_REQUEST['table'])) $_gets['table'] = $_REQUEST['table'];
+
 		// This string just contains sort info
 		$getsort = "sortkey=" . urlencode($_REQUEST['sortkey']) .
 			"&amp;sortdir=" . urlencode($_REQUEST['sortdir']);
+
+		// This array only contains sort info
+		$_getsort = array(
+			'sortkey' => $_REQUEST['sortkey'],
+			'sortdir' => $_REQUEST['sortdir']
+		);
 
 		if ($save_history && is_object($rs) && ($type == 'QUERY')) //{
 			$misc->saveScriptHistory($_REQUEST['query']);
@@ -529,9 +551,55 @@
 					break;
 				}
 			}
+
+			$buttons = array(
+				'edit' => array (
+					'content' => $lang['stredit'],
+					'attr'=> array (
+						'href' => array (
+							'url' => 'display.php',
+							'urlvars' => array_merge(array (
+								'action' => 'confeditrow',
+								'strings' => $_REQUEST['strings'],
+								'page' => $_REQUEST['page'],
+							), $_gets, $_getsort)
+						)
+					)
+				),
+				'delete' => array (
+					'content' => $lang['strdelete'],
+					'attr'=> array (
+						'href' => array (
+							'url' => 'display.php',
+							'urlvars' => array_merge(array (
+								'action' => 'confdelrow',
+								'strings' => $_REQUEST['strings'],
+								'page' => $_REQUEST['page'],
+							), $_gets, $_getsort)
+						)
+					)
+				),
+			);
+			$actions = array(
+				'actionbuttons' => &$buttons,
+				'place' => 'display-browse'
+			);
+			$plugin_manager->do_hook('actionbuttons', $actions);
+
+			foreach (array_keys($actions['actionbuttons']) as $action) {
+				$actions['actionbuttons'][$action]['attr']['href']['urlvars'] = array_merge(
+					$actions['actionbuttons'][$action]['attr']['href']['urlvars'],
+					$_gets, $_getsort
+				);
+			}
+
+			$edit_params = $actions['actionbuttons']['edit'];
+			$delete_params = $actions['actionbuttons']['delete'];
+
 			// Display edit and delete actions if we have a key
+			$colspan = count($buttons);
 			if (sizeof($key) > 0)
-				echo "<th colspan=\"2\" class=\"data\">{$lang['stractions']}</th>\n";
+				echo "<th colspan=\"{$colspan}\" class=\"data\">{$lang['stractions']}</th>\n";
 
 			/* we show OIDs only if we are in TABLE or SELECT type browsing */
 			printTableHeaderCells($rs, $gets, isset($object));
@@ -545,25 +613,41 @@
 				echo "<tr class=\"data{$id}\">\n";
 				// Display edit and delete links if we have a key
 				if (sizeof($key) > 0) {
-					$key_str = '';
+					$keys_array = array();
 					$has_nulls = false;
 					foreach ($key as $v) {
 						if ($rs->fields[$v] === null) {
 							$has_nulls = true;
 							break;
 						}
-						if ($key_str != '') $key_str .= '&amp;';
-						$key_str .= urlencode("key[{$v}]") . '=' . urlencode($rs->fields[$v]);
+						$keys_array["key[{$v}]"] = $rs->fields[$v];
 					}
 					if ($has_nulls) {
-						echo "<td colspan=\"2\">&nbsp;</td>\n";
+						echo "<td colspan=\"{$colspan}\">&nbsp;</td>\n";
 					} else {
-						echo "<td class=\"opbutton{$id}\"><a href=\"display.php?action=confeditrow&amp;strings=", 
-							urlencode($_REQUEST['strings']), "&amp;page=", 
-							urlencode($_REQUEST['page']), "&amp;{$key_str}&amp;{$gets}&amp;{$getsort}\">{$lang['stredit']}</a></td>\n";
-						echo "<td class=\"opbutton{$id}\"><a href=\"display.php?action=confdelrow&amp;strings=", 
-							urlencode($_REQUEST['strings']), "&amp;page=", 
-							urlencode($_REQUEST['page']), "&amp;{$key_str}&amp;{$gets}&amp;{$getsort}\">{$lang['strdelete']}</a></td>\n";
+
+						if (isset($actions['actionbuttons']['edit'])) {
+							$actions['actionbuttons']['edit'] = $edit_params;
+							$actions['actionbuttons']['edit']['attr']['href']['urlvars'] = array_merge(
+								$actions['actionbuttons']['edit']['attr']['href']['urlvars'],
+								$keys_array
+							);
+						}
+
+						if (isset($actions['actionbuttons']['delete'])) {
+							$actions['actionbuttons']['delete'] = $delete_params;
+							$actions['actionbuttons']['delete']['attr']['href']['urlvars'] = array_merge(
+								$actions['actionbuttons']['delete']['attr']['href']['urlvars'],
+								$keys_array
+							);
+						}
+
+						foreach ($actions['actionbuttons'] as $action) {
+							echo "<td class=\"opbutton{$id}\">";
+							$misc->printLink($action);
+							echo "</td>\n";
+						}
+						
 					}
 				}
 
@@ -581,57 +665,165 @@
 		}
 		else echo "<p>{$lang['strnodata']}</p>\n";
 
-		// Navigation links	
-		echo "<ul class=\"navlink\">\n";
+		// Navigation links
+		$navlinks = array();
+
+		$fields = array(
+			'server' => $_REQUEST['server'],
+			'database' => $_REQUEST['database'],
+		);
+
+		if (isset($_REQUEST['schema']))
+			$fields['schema'] = $_REQUEST['schema'];
 
 		// Return
 		if (isset($_REQUEST['return'])) {
-			$return_url = $misc->getHREFSubject($_REQUEST['return']);
+			$urlvars = $misc->getSubjectParams($_REQUEST['return']);
 
-			if ($return_url)
-				echo "\t<li><a href=\"{$return_url}\">{$lang['strback']}</a></li>\n";
+			$navlinks['back'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => $urlvars['url'],
+						'urlvars' => $urlvars['params']
+					)
+				),
+				'content' => $lang['strback']
+			);
 		}
 
 		// Edit SQL link
 		if (isset($_REQUEST['query']))
-			echo "\t<li><a href=\"database.php?{$misc->href}&amp;action=sql&amp;paginate=on&amp;query=",
-				urlencode($_REQUEST['query']), "\">{$lang['streditsql']}</a></li>\n";
+			$navlinks['edit'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'database.php',
+						'urlvars' => array_merge($fields, array (
+							'action' => 'sql',
+							'paginate' => 'on',
+							'query' => $_REQUEST['query']
+						))
+					)
+				),
+				'content' => $lang['streditsql']
+			);
 
 		// Expand/Collapse
 		if ($_REQUEST['strings'] == 'expanded')
-			echo "\t<li><a href=\"display.php?{$gets}&amp;{$getsort}&amp;strings=collapsed&amp;page=", 
-				urlencode($_REQUEST['page']), "\">{$lang['strcollapse']}</a></li>\n";
+			$navlinks['collapse'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'display.php',
+						'urlvars' => array_merge(
+							$_gets, $_getsort,
+							array (
+								'strings' => 'collapsed',
+								'page' => $_REQUEST['page']
+						))
+					)
+				),
+				'content' => $lang['strcollapse']
+			);
 		else
-			echo "\t<li><a href=\"display.php?{$gets}&amp;{$getsort}&amp;strings=expanded&amp;page=", 
-				urlencode($_REQUEST['page']), "\">{$lang['strexpand']}</a></li>\n";
+			$navlinks['collapse'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'display.php',
+						'urlvars' => array_merge(
+							$_gets, $_getsort,
+							array (
+								'strings' => 'expanded',
+								'page' => $_REQUEST['page']
+						))
+					)
+				),
+				'content' => $lang['strexpand']
+			);
 
 		// Create report
-		if (isset($_REQUEST['query']) && ($subject !== 'report') && $conf['show_reports'] && isset($rs) && is_object($rs) && $rs->recordCount() > 0)
-			echo "\t<li><a href=\"reports.php?{$misc->href}&amp;action=create&amp;report_sql=",
-				urlencode($_REQUEST['query']), "&amp;paginate=", (isset($_REQUEST['paginate'])? urlencode($_REQUEST['paginate']):'f'), "\">{$lang['strcreatereport']}</a></li>\n";
+		if (isset($_REQUEST['query']) && ($subject !== 'report') && $conf['show_reports'] && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
+			$navlinks['createreport'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'reports.php',
+						'urlvars' => array_merge($fields, array(
+							'action' => 'create',
+							'report_sql' => $_REQUEST['query'],
+							'paginate' => isset($_REQUEST['paginate'])? $_REQUEST['paginate']:'f'
+						))
+					)
+				),
+				'content' => $lang['strcreatereport']
+			);
+		}
 
 		// Create view and download
 		if (isset($_REQUEST['query']) && isset($rs) && is_object($rs) && $rs->recordCount() > 0) {
+			
+
 			// Report views don't set a schema, so we need to disable create view in that case
-			if (isset($_REQUEST['schema'])) 
-				echo "\t<li><a href=\"views.php?action=create&amp;formDefinition=",
-					urlencode($_REQUEST['query']), "&amp;{$misc->href}\">{$lang['strcreateview']}</a></li>\n";
-			echo "\t<li><a href=\"dataexport.php?query=", urlencode($_REQUEST['query']);
+			if (isset($_REQUEST['schema'])) {
+
+				$navlinks['createview'] = array (
+					'attr'=> array (
+						'href' => array (
+							'url' => 'views.php',
+							'urlvars' => array_merge($fields, array(
+								'action' => 'create',
+								'formDefinition' => $_REQUEST['query']
+							))
+						)
+					),
+					'content' => $lang['strcreateview']
+				);
+			}
+
+			$urlvars = array('query' => $_REQUEST['query']);
 			if (isset($_REQUEST['search_path']))
-				echo "&amp;search_path=", urlencode($_REQUEST['search_path']);
-			echo "&amp;{$misc->href}\">{$lang['strdownload']}</a></li>\n";
+				$urlvars['search_path'] = $_REQUEST['search_path'];
+
+			$navlinks['download'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'dataexport.php',
+						'urlvars' => array_merge($fields, $urlvars)
+					)
+				),
+				'content' => $lang['strdownload']
+			);
 		}
 
 		// Insert
 		if (isset($object) && (isset($subject) && $subject == 'table'))
-			echo "\t<li><a href=\"tables.php?action=confinsertrow&amp;table=",
-				urlencode($object), "&amp;{$misc->href}\">{$lang['strinsert']}</a></li>\n";
+			$navlinks['insert'] = array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'tables.php',
+						'urlvars' => array_merge($fields, array(
+							'action' => 'confinsertrow',
+							'table' => $object
+						))
+					)
+				),
+				'content' => $lang['strinsert']
+			);
 
 		// Refresh
-		echo "\t<li><a href=\"display.php?{$gets}&amp;{$getsort}&amp;strings=", urlencode($_REQUEST['strings']), 
-			"&amp;page=" . urlencode($_REQUEST['page']),
-			"\">{$lang['strrefresh']}</a></li>\n";
-		echo "</ul>\n";
+		$navlinks['refresh'] = array (
+			'attr'=> array (
+				'href' => array (
+					'url' => 'display.php',
+					'urlvars' => array_merge(
+						$_gets, $_getsort,
+						array(
+							'strings' => $_REQUEST['strings'],
+							'page' => $_REQUEST['page']
+					))
+				)
+			),
+			'content' => $lang['strrefresh']
+		);
+
+		$misc->printNavLinks($navlinks, 'display-browse');
 	}
 
 
@@ -640,7 +832,6 @@
 		doBrowseFK();
 	}
 
-	$scripts  = "<script src=\"libraries/js/jquery.js\" type=\"text/javascript\"></script>\n";
 	$scripts .= "<script src=\"js/display.js\" type=\"text/javascript\"></script>";
 
 	$scripts .= "<script type=\"text/javascript\">\n";

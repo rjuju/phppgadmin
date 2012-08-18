@@ -68,26 +68,45 @@
 		
 		$actions = array(
 			'logout' => array(
-				'title' => $lang['strlogout'],
-				'url'   => "servers.php?action=logout&amp;",
-				'vars'  => array('logoutServer' => 'id'),
+				'content' => $lang['strlogout'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'servers.php',
+						'urlvars' => array (
+							'action' => 'logout',
+							'logoutServer' => field('id')
+						)
+					)
+				)
 			),
 		);
-		
+
 		if (($group !== false) and isset($conf['srv_groups'][$group])) {
 			printf("<h2>{$lang['strgroupservers']}</h2>", htmlentities($conf['srv_groups'][$group]['desc'], ENT_QUOTES, 'UTF-8'));
-			$actions['logout']['url'] .= "group=" . htmlentities($group, ENT_COMPAT, 'UTF-8') . "&amp;";
+			$actions['logout']['attr']['href']['urlvars']['group'] = $group;
 		}
 		
-		$misc->printTable($servers, $columns, $actions, $lang['strnoobjects'], 'svPre');
+		$misc->printTable($servers, $columns, $actions, 'servers-servers', $lang['strnoobjects'], 'svPre');
 		
 		if (isset($conf['srv_groups'])) {
-			echo "<br /><ul class=\"navlink\">\n";
-			echo "\t<li><a href=\"servers.php\">{$lang['strallservers']}</a></li>\n";
+			$navlinks = array (
+				'showall' => array (
+					'attr'=> array ('href' => array ('url' => 'servers.php')),
+					'content' => $lang['strallservers']
+				)
+			);
 			foreach ($conf['srv_groups'] as $id => $grp) {
-				echo "\t<li><a href=\"servers.php?group={$id}\">", htmlentities($grp['desc'], ENT_QUOTES, 'UTF-8'), "</a></li>\n";
+				$navlinks[] = array (
+					'attr'=> array (
+						'href' => array (
+							'url' => 'servers.php',
+							'urlvars' => array ('group' => $id)
+						)
+					),
+					'content' => $grp['desc']
+				);
 			}
-			echo "</ul>\n";			
+			$misc->printNavLinks($navlinks, 'servers-servers');
 		}
 	}
 	
@@ -124,7 +143,7 @@
 						),
 		);
 		
-		$misc->printTreeXML($servers, $attrs);
+		$misc->printTree($servers, $attrs, 'servers');
 		exit;
 	}
 	
@@ -149,7 +168,7 @@
 			)
 		);
 		
-		$misc->printTreeXML($groups, $attrs);
+		$misc->printTree($groups, $attrs, 'serversgroups');
 		exit;
 	}
 	

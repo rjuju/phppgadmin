@@ -123,8 +123,50 @@
 		}
 		else echo "<p>{$lang['strinvalidparam']}</p>\n";
 
-		echo "<ul class=\"navlink\">\n\t<li><a href=\"reports.php?{$misc->href}\">{$lang['strshowallreports']}</a></li>\n";
-		echo "\t<li><a href=\"reports.php?action=edit&amp;{$misc->href}&amp;report_id={$report->fields['report_id']}\">{$lang['stredit']}</a></li>\n</ul>\n";
+		$urlvars = array ('server' => $_REQUEST['server']);
+		if (isset($_REQUEST['schema'])) $urlvars['schema'] = $_REQUEST['schema'];
+		if (isset($_REQUEST['database'])) $urlvars['database'] = $_REQUEST['database'];
+
+		$navlinks = array (
+			'showall' => array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'reports.php',
+						'urlvars' => $urlvars
+					)
+				),
+				'content' => $lang['strshowallreports']
+			),
+			'alter' => array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'reports.php',
+						'urlvars' => array_merge($urlvars, array(
+							'action' => 'edit',
+							'report_id' => $report->fields['report_id']
+						))
+					)
+				),
+				'content' => $lang['stredit']
+			),
+			'exec' => array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'sql.php',
+						'urlvars' => array_merge($urlvars, array(
+							'subject' => 'report',
+							'report' => $report->fields['report_name'],
+							'return' => 'report',
+							'database' => $report->fields['db_name'],
+							'reportid' => $report->fields['report_id'],
+							'paginate' => $report->fields['paginate']
+						))
+					)
+				),
+				'content' => $lang['strexecute']
+			)
+		);
+		$misc->printNavLinks($navlinks, 'reports-properties');
 	}
 
 	/**
@@ -237,7 +279,6 @@
 			else
 				doDefault($lang['strreportdroppedbad']);
 		}
-
 	}
 
 	/**
@@ -284,27 +325,68 @@
 		
 		$actions = array(
 			'run' => array(
-				'title' => $lang['strexecute'],
-				'url'   => "sql.php?subject=report&amp;{$misc->href}&amp;return=report&amp;",
-				'vars'  => array('report' => 'report_name', 'database' => 'db_name', 'reportid' => 'report_id', 'paginate' => 'paginate'),
+				'content' => $lang['strexecute'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'sql.php',
+						'urlvars' => array (
+							'subject' => 'report',
+							'return' => 'report',
+							'report' => field('report_name'),
+							'database' => field('db_name'),
+							'reportid' => field('report_id'),
+							'paginate' => field('paginate')
+						)
+					)
+				)
 			),
 			'edit' => array(
-				'title' => $lang['stredit'],
-				'url'   => "reports.php?action=edit&amp;{$misc->href}&amp;",
-				'vars'  => array('report_id' => 'report_id'),
+				'content' => $lang['stredit'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'reports.php',
+						'urlvars' => array (
+							'action' => 'edit',
+							'report_id' => field('report_id')
+						)
+					)
+				)
 			),
 			'drop' => array(
-				'title' => $lang['strdrop'],
-				'url'   => "reports.php?action=confirm_drop&amp;{$misc->href}&amp;",
-				'vars'  => array('report_id' => 'report_id'),
+				'content' => $lang['strdrop'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'reports.php',
+						'urlvars' => array (
+							'action' => 'confirm_drop',
+							'report_id' => field('report_id')
+						)
+					)
+				)
 			),
 		);
 		
-		$misc->printTable($reports, $columns, $actions, $lang['strnoreports']);
+		$misc->printTable($reports, $columns, $actions, 'reports-reports', $lang['strnoreports']);
 		
-		echo "<p><a class=\"navlink\" href=\"reports.php?action=create&amp;{$misc->href}\">{$lang['strcreatereport']}</a></p>\n";
+		$urlvars = array ('server' => $_REQUEST['server']);
+		if (isset($_REQUEST['database'])) $urlvars['database'] = $_REQUEST['database'];
+		if (isset($_REQUEST['schema'])) $urlvars['schema'] = $_REQUEST['schema'];
+
+		$misc->printNavLinks(array (
+			'create' => array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'reports.php',
+						'urlvars' => array_merge(array (
+							'action' => 'create'
+						), $urlvars)
+					)
+				),
+				'content' => $lang['strcreatereport']
+			)), 'reports-reports'
+		);
 	}
-	
+
 	$misc->printHeader($lang['strreports']);
 	$misc->printBody();
 

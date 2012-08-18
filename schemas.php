@@ -52,28 +52,61 @@
 				'url' => 'schemas.php',
 			),
 			'drop' => array(
-				'title' => $lang['strdrop'],
-				'url'   => "schemas.php?action=drop&amp;{$misc->href}&amp;",
-				'vars'  => array('nsp' => 'nspname'),
+				'content' => $lang['strdrop'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'schemas.php',
+						'urlvars' => array (
+							'action' => 'drop',
+							'nsp' => field('nspname')
+						)
+					)
+				),
 				'multiaction' => 'drop',
 			),
 			'privileges' => array(
-				'title' => $lang['strprivileges'],
-				'url'   => "privileges.php?subject=schema&amp;{$misc->href}&amp;",
-				'vars'  => array('schema' => 'nspname'),
+				'content' => $lang['strprivileges'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'privileges.php',
+						'urlvars' => array (
+							'subject' => 'schema',
+							'schema' => field('nspname')
+						)
+					)
+				)
 			),
 			'alter' => array(
-				'title' => $lang['stralter'],
-				'url'   => "schemas.php?action=alter&amp;{$misc->href}&amp;",
-				'vars'  => array('schema' => 'nspname'),
-			),
+				'content' => $lang['stralter'],
+				'attr'=> array (
+					'href' => array (
+						'url' => 'schemas.php',
+						'urlvars' => array (
+							'action' => 'alter',
+							'schema' => field('nspname')
+						)
+					)
+				)
+			)
 		);
 
 		if (!$data->hasAlterSchema()) unset($actions['alter']);
 
-		$misc->printTable($schemas, $columns, $actions, $lang['strnoschemas']);
+		$misc->printTable($schemas, $columns, $actions, 'schemas-schemas', $lang['strnoschemas']);
 
-		echo "<p><a class=\"navlink\" href=\"schemas.php?action=create&amp;{$misc->href}\">{$lang['strcreateschema']}</a></p>\n";
+		$misc->printNavLinks(array ('create' => array (
+				'attr'=> array (
+					'href' => array (
+						'url' => 'schemas.php',
+						'urlvars' => array (
+							'action' => 'create',
+							'server' => $_REQUEST['server'],
+							'database' => $_REQUEST['database']
+						)
+					)
+				),
+				'content' => $lang['strcreateschema']
+			)), 'schemas-schemas');
 	}
 
 	/**
@@ -355,7 +388,7 @@
 	 * Generate XML for the browser tree.
 	 */
 	function doTree() {
-		global $misc, $data, $lang, $slony;
+		global $misc, $data, $lang;
 
 		$schemas = $data->getSchemas();
 
@@ -381,7 +414,7 @@
 						),
 		);
 
-		$misc->printTreeXML($schemas, $attrs);
+		$misc->printTree($schemas, $attrs, 'schemas');
 
 		exit;
 	}
@@ -409,7 +442,7 @@
 						)
 		);
 
-		$misc->printTreeXML($items, $attrs);
+		$misc->printTree($items, $attrs, 'schema');
 		exit;
 	}
 

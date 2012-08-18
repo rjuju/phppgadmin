@@ -35,11 +35,14 @@
 	$conf['servers'][0]['pg_dump_path'] = '/usr/bin/pg_dump';
 	$conf['servers'][0]['pg_dumpall_path'] = '/usr/bin/pg_dumpall';
 
-	// Slony (www.slony.info) support?
-	$conf['servers'][0]['slony_support'] = false;
-	// Specify the path to the Slony SQL scripts (where slony1_base.sql is located, etc.)
-	// No trailing slash.
-	$conf['servers'][0]['slony_sql'] = '/usr/share/pgsql';
+	//You can choose a specific theme for :
+	// the server:
+	//$conf['servers'][0]['theme']['default'] = 'default';
+	// users:
+        //$conf['servers'][0]['theme']['user']['specific_user'] = 'default';
+	// databases:
+        //$conf['servers'][0]['theme']['db']['specific_db'] = 'default';
+
 
 	// Example for a second server (PostgreSQL for Windows)
 	//$conf['servers'][1]['desc'] = 'Test Server';
@@ -49,8 +52,6 @@
 	//$conf['servers'][1]['defaultdb'] = 'template1';
 	//$conf['servers'][1]['pg_dump_path'] = 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dump.exe';
 	//$conf['servers'][1]['pg_dumpall_path'] = 'C:\\Program Files\\PostgreSQL\\8.0\\bin\\pg_dumpall.exe';
-	//$conf['servers'][1]['slony_support'] = false;
-	//$conf['servers'][1]['slony_sql'] = 'C:\\Program Files\\PostgreSQL\\8.0\\share';
 	
 	
 	// Example of groups definition.
@@ -149,7 +150,17 @@
 	// Configuration for ajax scripts
 	// Time in seconds. If set to 0, refreshing data using ajax will be disabled (locks and activity pages)
 	$conf['ajax_refresh'] = 3;
-	
+
+	/** Plugins management
+	 * Add plugin names to the following array to activate them
+	 * Example:
+	 *   $conf['plugins'] = array(
+	 *     'Example',
+	 *     'Slony'
+	 *   );
+	 */
+	$conf['plugins'] = array();
+
 	/*****************************************
 	 * Don't modify anything below this line *
 	 *****************************************/
