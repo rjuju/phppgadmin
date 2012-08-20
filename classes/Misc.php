@@ -541,6 +541,28 @@
 				echo "</title>\n";
 
 				if ($script) echo "{$script}\n";
+?>
+                <script src="xloadtree/xtree2.js" type="text/javascript"></script>
+                <script src="xloadtree/xloadtree2.js" type="text/javascript"></script>
+<script language="javascript">
+function toggle(){
+	if ($('#browser').hasClass('browser-visible')){
+		$('#browser').removeClass('browser-visible').addClass('browser-invisible');
+		$('#browser-button').css('left','0px');
+	}else{
+		$('#browser').removeClass('browser-invisible').addClass('browser-visible');
+		$('#browser-button').css('left','220px');
+	}
+}
+	
+</script>
+                <style type="text/css">
+                        <?php
+			print('.webfx-tree-children { background-image: url("' . $this->icon('I') . '"); }');
+			?>
+                </style>
+<?php
+
 				$this->printUpdateBrowserTheme($conf['theme']);
 				echo "</head>\n";
 			}
@@ -578,13 +600,72 @@
 					$bodyClass = htmlspecialchars($bodyClass);
 					echo "<body", ($bodyClass == '' ? '' : " class=\"{$bodyClass}\"");
 					echo ">\n";
+					//if ($bodyClass == '')
+						//$this->printBrowser();
 				}
 			}
 		}
 
+		function printBrowser(){
+			global $lang;
+			echo "<span id=\"browser-button\" onclick=\"toggle();\">Browser</span><div id=\"browser\" class=\"browser-invisible\">\n";
+			echo "<div dir=\"ltr\">\n";
+?>
+
+        <div class="logo"><a href="intro.php" target="detail">PhpPgAdmin</a></div>
+        <div class="refreshTree"><a href="browser.php" target="browser" ><img src="<?php echo $this->icon('Refresh'); ?>" alt="title="<?php echo $lang['strrefresh']; ?>" /></a></div>
+<script type="text/javascript">
+
+webFXTreeConfig.rootIcon                = "<?php echo $this->icon('Servers') ?>";
+webFXTreeConfig.openRootIcon    = "<?php echo $this->icon('Servers') ?>";
+webFXTreeConfig.folderIcon              = "";
+webFXTreeConfig.openFolderIcon  = "";
+webFXTreeConfig.fileIcon                = "";
+webFXTreeConfig.iIcon                   = "<?php echo $this->icon('I') ?>";
+webFXTreeConfig.lIcon                   = "<?php echo $this->icon('L') ?>";
+webFXTreeConfig.lMinusIcon              = "<?php echo $this->icon('Lminus') ?>";
+webFXTreeConfig.lPlusIcon               = "<?php echo $this->icon('Lplus') ?>";
+webFXTreeConfig.tIcon                   = "<?php echo $this->icon('T') ?>";
+webFXTreeConfig.tMinusIcon              = "<?php echo $this->icon('Tminus') ?>";
+webFXTreeConfig.tPlusIcon               = "<?php echo $this->icon('Tplus') ?>";
+webFXTreeConfig.blankIcon               = "<?php echo $this->icon('blank') ?>";
+webFXTreeConfig.loadingIcon             = "<?php echo $this->icon('Loading') ?>";
+webFXTreeConfig.loadingText             = "<?php echo $lang['strloading'] ?>";
+webFXTreeConfig.errorIcon               = "<?php echo $this->icon('ObjectNotFound') ?>";
+webFXTreeConfig.errorLoadingText = "<?php echo $lang['strerrorloading'] ?>";
+webFXTreeConfig.reloadText              = "<?php echo $lang['strclicktoreload'] ?>";
+
+// Set default target frame:
+//WebFXTreeAbstractNode.prototype.target = 'detail';
+
+// Disable double click:
+WebFXTreeAbstractNode.prototype._ondblclick = function(){}
+
+// Show tree XML on double click - for debugging purposes only
+/*
+// UNCOMMENT THIS FOR DEBUGGING (SHOWS THE SOURCE XML)
+WebFXTreeAbstractNode.prototype._ondblclick = function(e){
+        var el = e.target || e.srcElement;
+
+        if (this.src != null)
+                window.open(this.src, this.target || "_self");
+        return false;
+};
+*/
+var tree = new WebFXLoadTree("<?php echo $lang['strservers']; ?>", "servers.php?action=tree", "servers.php");
+
+tree.write();
+tree.setExpanded(true);
+
+</script>
+
+<?php
+		echo "</div /></div>\n";
+		}
+
 		function printUpdateBrowserTheme($theme){
 			echo "<script type=\"text/javascript\">\n";
-			echo "$(\"#csstheme\", window.parent.frames[0].document).attr(\"href\",\"themes/".$theme."/global.css\");\n";
+			echo "$(\"#csstheme\").attr(\"href\",\"themes/".$theme."/global.css\");\n";
  //'\"themes/".$theme."/global.css\"');";
 			echo "</script>\n";
 

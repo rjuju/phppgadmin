@@ -264,3 +264,49 @@ div.logo a {
 	height: 100%;
 	color: transparent;
 }
+
+#browser-button {
+	position: absolute;
+	top: 6.2em;
+	left: 0px;
+	width: 70px;
+	cursor: pointer;
+	background: #eee;
+	border: 1px solid #dde;
+	border-left: none;
+	font-size: 1.1em;
+	font-weight: bold;
+	text-transform: capitalize;
+	padding: .33em .75em .33em 1em;
+	border-radius: 0 1em 1em 0;
+/*	-moz-border-radius: 1em 0 1em 0;*/
+/*	-webkit-border-top-right-radius: 1em;*/
+/*	-webkit-border-bottom-right-radius: 1em;*/
+	color: #444;
+}
+
+.browser-visible {
+	position: absolute;
+	overflow: auto;
+	top: 0px;
+	left: 0px;
+	width: 200px;
+	height: 97%;
+	background: #eee;
+	border: 1px solid #dde;
+	border-right: none;
+	font-size: 1.1em;
+	font-weight: bold;
+	text-transform: capitalize;
+	padding: .33em .75em .33em 1em;
+	border-radius: 1em 0 0 1em;
+	-moz-border-radius: 1em 0 0 1em;
+	-webkit-border-top-left-radius: 1em;
+	-webkit-border-bottom-left-radius: 1em;
+	color: #444;
+}
+
+.browser-invisible {
+	position: absolute;
+	left: -400px;	
+}
