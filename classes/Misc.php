@@ -600,8 +600,8 @@ function toggle(){
 					$bodyClass = htmlspecialchars($bodyClass);
 					echo "<body", ($bodyClass == '' ? '' : " class=\"{$bodyClass}\"");
 					echo ">\n";
-					//if ($bodyClass == '')
-						//$this->printBrowser();
+					if ($bodyClass == '')
+						$this->printBrowser();
 				}
 			}
 		}

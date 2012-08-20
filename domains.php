@@ -490,7 +490,7 @@
 		$misc->printTable($domains, $columns, $actions, 'domains-domains', $lang['strnodomains']);
 
 		$navlinks = array (
-			'create' => rray (
+			'create' => array (
 				'attr'=> array (
 					'href' => array (
 						'url' => 'domains.php',
