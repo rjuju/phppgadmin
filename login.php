@@ -14,6 +14,7 @@
 	$misc->printHeader($lang['strlogin']);
 	$misc->printBody();
 	$misc->printTrail('root');
+	$misc->printBrowser();
 	
 	$server_info = $misc->getServerInfo($_REQUEST['server']);
 	

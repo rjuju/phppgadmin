@@ -21,6 +21,7 @@
 
 		$misc->printTrail('database');
 		$misc->printTabs('database','schemas');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		// Check that the DB actually supports schemas
@@ -128,6 +129,7 @@
 
 		$misc->printTrail('database');
 		$misc->printTitle($lang['strcreateschema'],'pg.schema.create');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		echo "<form action=\"schemas.php\" method=\"post\">\n";
@@ -188,6 +190,7 @@
 
 		$misc->printTrail('schema');
 		$misc->printTitle($lang['stralter'],'pg.schema.alter');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$schema = $data->getSchemaByName($_REQUEST['schema']);
@@ -269,6 +272,7 @@
 		if ($confirm) {
 			$misc->printTrail('schema');
 			$misc->printTitle($lang['strdrop'],'pg.schema.drop');
+			$misc->printBrowser();
 
 			echo "<form action=\"schemas.php\" method=\"post\">\n";
 			//If multi drop
@@ -336,6 +340,7 @@
 
 		$misc->printTrail('schema');
 		$misc->printTabs('schema','export');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		echo "<form action=\"dbexport.php\" method=\"post\">\n";

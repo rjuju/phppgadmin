@@ -59,6 +59,7 @@
 		global $lang;
 		$misc->printTrail('function');
 		$misc->printTitle($lang['stralter'],'pg.function.alter');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$fndata = $data->getFunction($_REQUEST['function_oid']);
@@ -234,6 +235,7 @@
 
 		$misc->printTrail('function');
 		$misc->printTitle($lang['strproperties'],'pg.function');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$funcdata = $data->getFunction($_REQUEST['function_oid']);
@@ -391,6 +393,7 @@
 		if ($confirm) {
 			$misc->printTrail('schema');
 			$misc->printTitle($lang['strdrop'],'pg.function.drop');
+			$misc->printBrowser();
 
 			echo "<form action=\"functions.php\" method=\"post\">\n";
 
@@ -491,6 +494,7 @@
 				$misc->printTitle($lang['strcreateplfunction'],'pg.function.create.pl');
 				break;
 		}
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		// Create string for return type list
@@ -809,6 +813,7 @@
 
 		$misc->printTrail('schema');
 		$misc->printTabs('schema','functions');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$funcs = $data->getFunctions();

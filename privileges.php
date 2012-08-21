@@ -42,6 +42,7 @@
 					$misc->printTitle($lang['strrevoke'],'pg.privilege.revoke');
 					break;
 			}
+			$misc->printBrowser();
 			$misc->printMsg($msg);
 			
 			echo "<form action=\"privileges.php\" method=\"post\">\n";
@@ -161,6 +162,7 @@
 			default:
 				$misc->printTitle($lang['strprivileges'], 'pg.privilege');
 		}
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		// Determine whether object should be ref'd by name or oid.

@@ -19,6 +19,7 @@
 		$misc->printTrail('schema');
 		$misc->printTabs('schema','fulltext');
 		$misc->printTabs('fulltext','ftsconfigs');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$cfgs = $data->getFtsConfigurations(false);
@@ -99,6 +100,7 @@
 		if ($confirm) {
 			$misc->printTrail('ftscfg');
 			$misc->printTitle($lang['strdrop'], 'pg.ftscfg.drop');
+			$misc->printBrowser();
 
 			echo "<p>", sprintf($lang['strconfdropftsconfig'], $misc->printVal($_REQUEST['ftscfg'])), "</p>\n";
 
@@ -131,6 +133,7 @@
 		if ($confirm) {
 			$misc->printTrail('ftscfg'); // TODO: change to smth related to dictionary
 			$misc->printTitle($lang['strdrop'], 'pg.ftsdict.drop');
+			$misc->printBrowser();
 
 			echo "<p>", sprintf($lang['strconfdropftsdict'], $misc->printVal($_REQUEST['ftsdict'])), "</p>\n";
 
@@ -182,6 +185,7 @@
 
 		$misc->printTrail('schema');
 		$misc->printTitle($lang['strftscreateconfig'], 'pg.ftscfg.create');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		echo "<form action=\"fulltext.php\" method=\"post\">\n";
@@ -286,6 +290,7 @@
 
 		$misc->printTrail('ftscfg');
 		$misc->printTitle($lang['stralter'], 'pg.ftscfg.alter');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$ftscfg = $data->getFtsConfigurationByName($_REQUEST['ftscfg']);
@@ -349,6 +354,7 @@
 		$misc->printTrail('schema');
 		$misc->printTabs('schema','fulltext');
 		$misc->printTabs('fulltext','ftsparsers');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$parsers = $data->getFtsParsers(false);
@@ -386,6 +392,7 @@
 		$misc->printTrail('schema');
 		$misc->printTabs('schema','fulltext');
 		$misc->printTabs('fulltext','ftsdicts');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$dicts = $data->getFtsDictionaries(false);
@@ -468,6 +475,7 @@
 		$misc->printTrail('ftscfg');
 		$misc->printTabs('schema','fulltext');
 		$misc->printTabs('fulltext','ftsconfigs');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		echo "<h3>{$lang['strftsconfigmap']}</h3>\n";
@@ -577,6 +585,7 @@
 		$misc->printTrail('schema');
 		// TODO: create doc links
 		$misc->printTitle($lang['strftscreatedict'], 'pg.ftsdict.create');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		echo "<form action=\"fulltext.php\" method=\"post\">\n";
@@ -696,6 +705,7 @@
 
 		$misc->printTrail('ftscfg'); // TODO: change to smth related to dictionary
 		$misc->printTitle($lang['stralter'], 'pg.ftsdict.alter');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$ftsdict = $data->getFtsDictionaryByName($_REQUEST['ftsdict']);
@@ -766,6 +776,7 @@
 		if ($confirm) {
 			$misc->printTrail('ftscfg'); // TODO: proper breadcrumbs
 			$misc->printTitle($lang['strdrop'], 'pg.ftscfg.alter');
+			$misc->printBrowser();
 
 			echo "<form action=\"fulltext.php\" method=\"post\">\n";
 
@@ -815,6 +826,7 @@
 
 		$misc->printTrail('ftscfg');
 		$misc->printTitle($lang['stralter'], 'pg.ftscfg.alter');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$ftsdicts = $data->getFtsDictionaries();
@@ -902,6 +914,7 @@
 
 		$misc->printTrail('ftscfg');
 		$misc->printTitle($lang['stralter'], 'pg.ftscfg.alter');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$ftsdicts = $data->getFtsDictionaries();

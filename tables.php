@@ -886,6 +886,7 @@
 			//'cluster' TODO ?
 		);
 
+		$misc->printBrowser();
 		if (!$data->hasTablespaces()) unset($columns['tablespace']);
 
 		$misc->printTable($tables, $columns, $actions, 'tables-tables', $lang['strnotables']);

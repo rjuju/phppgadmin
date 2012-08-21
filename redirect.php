@@ -7,7 +7,7 @@
 	include_once('./libraries/lib.inc.php');
 	
 	$url = $misc->getLastTabURL($subject);
-	
+print_r($url);
 	// Load query vars into superglobal arrays
 	if (isset($url['urlvars'])) {
 		$vars = array();

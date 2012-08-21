@@ -35,6 +35,7 @@
 	
 		$misc->printTrail('domain');
 		$misc->printTitle($lang['stralter'],'pg.domain.alter');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 		
 		// Fetch domain info
@@ -96,6 +97,7 @@
 		if ($confirm) {
 			$misc->printTrail('domain');
 			$misc->printTitle($lang['straddcheck'],'pg.constraint.check');
+			$misc->printBrowser();
 			$misc->printMsg($msg);
 
 			echo "<form action=\"domains.php\" method=\"post\">\n";
@@ -142,6 +144,7 @@
 		if ($confirm) {
 			$misc->printTrail('domain');
 			$misc->printTitle($lang['strdrop'],'pg.constraint.drop');
+			$misc->printBrowser();
 			$misc->printMsg($msg);
 			
 			echo "<p>", sprintf($lang['strconfdropconstraint'], $misc->printVal($_REQUEST['constraint']), 
@@ -175,6 +178,7 @@
 	
 		$misc->printTrail('domain');
 		$misc->printTitle($lang['strproperties'],'pg.domain');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 		
 		$domaindata = $data->getDomain($_REQUEST['domain']);
@@ -305,6 +309,7 @@
 		if ($confirm) {
 			$misc->printTrail('domain');
 			$misc->printTitle($lang['strdrop'],'pg.domain.drop');
+			$misc->printBrowser();
 			
 			echo "<p>", sprintf($lang['strconfdropdomain'], $misc->printVal($_REQUEST['domain'])), "</p>\n";	
 			echo "<form action=\"domains.php\" method=\"post\">\n";
@@ -344,6 +349,7 @@
 		
 		$misc->printTrail('schema');
 		$misc->printTitle($lang['strcreatedomain'],'pg.domain.create');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		echo "<form action=\"domains.php\" method=\"post\">\n";
@@ -420,6 +426,7 @@
 		
 		$misc->printTrail('schema');
 		$misc->printTabs('schema','domains');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 		
 		$domains = $data->getDomains();

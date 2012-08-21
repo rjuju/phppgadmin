@@ -345,6 +345,7 @@
 		
 		$misc->printTrail('schema');
 		$misc->printTitle($lang['strcreateviewwiz'], 'pg.view.create');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 		
 		echo "<form action=\"views.php\" method=\"post\">\n";
@@ -384,6 +385,7 @@
 		
 		$misc->printTrail('schema');
 		$misc->printTitle($lang['strcreateview'], 'pg.view.create');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 		
 		echo "<form action=\"views.php\" method=\"post\">\n";
@@ -555,6 +557,7 @@
 		
 		$misc->printTrail('schema');
 		$misc->printTabs('schema','views');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 		
 		$views = $data->getViews();
@@ -777,7 +780,6 @@
 			doDefault();
 			break;
 	}	
-
 	$misc->printFooter();
 	
 ?>

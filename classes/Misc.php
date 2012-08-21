@@ -548,10 +548,8 @@
 function toggle(){
 	if ($('#browser').hasClass('browser-visible')){
 		$('#browser').removeClass('browser-visible').addClass('browser-invisible');
-		$('#browser-button').css('left','0px');
 	}else{
 		$('#browser').removeClass('browser-invisible').addClass('browser-visible');
-		$('#browser-button').css('left','220px');
 	}
 }
 	
@@ -581,7 +579,6 @@ function toggle(){
 				elseif (isset($_reload_drop_database)) $this->printReload(true);
 				if (!isset($_no_bottom_link)) 
 					echo "<a href=\"#\" class=\"bottom_link\">".$lang['strgotoppage']."</a>";
-
 				echo "</body>\n";
 			}
 			echo "</html>\n";
@@ -600,15 +597,15 @@ function toggle(){
 					$bodyClass = htmlspecialchars($bodyClass);
 					echo "<body", ($bodyClass == '' ? '' : " class=\"{$bodyClass}\"");
 					echo ">\n";
-					if ($bodyClass == '')
-						$this->printBrowser();
+/*					if ($bodyClass == '')
+						$this->printBrowser();*/
 				}
 			}
 		}
 
 		function printBrowser(){
 			global $lang;
-			echo "<span id=\"browser-button\" onclick=\"toggle();\">Browser</span><div id=\"browser\" class=\"browser-invisible\">\n";
+			echo "<span id=\"browser-button\" onclick=\"toggle();\">Browser</span><div id=\"browser\" class=\"browser-visible\">\n";
 			echo "<div dir=\"ltr\">\n";
 ?>
 

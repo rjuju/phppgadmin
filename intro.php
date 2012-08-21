@@ -16,6 +16,7 @@
 
 	$misc->printTrail('root');
 	$misc->printTabs('root','intro');
+	$misc->printBrowser();
 ?>
 
 <h1><?php echo "$appName $appVersion (PHP ". phpversion() .')' ?></h1>

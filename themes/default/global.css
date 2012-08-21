@@ -133,7 +133,10 @@ td.opbutton2 {
 	padding-right: 6px;
 	text-align: center;
 }
-.topbar {border: 2px solid #CECF9C}
+.topbar {border: 2px solid #CECF9C;}
+.topbar table{
+	padding-left: 95px;
+}
 .topbar, .topbar * {
 	background-color: #CECF9C;
 }
@@ -267,9 +270,9 @@ div.logo a {
 
 #browser-button {
 	position: absolute;
-	top: 6.2em;
-	left: 0px;
+	top: 3px;
 	width: 70px;
+	left: 0px;
 	cursor: pointer;
 	background: #eee;
 	border: 1px solid #dde;
@@ -285,22 +288,32 @@ div.logo a {
 	color: #444;
 }
 
+#browser-button.browser-visible {
+	left: 210px;
+}
+
+#browser-button.browser-invisible {
+	left: 210px;
+}
+
 .browser-visible {
-	position: absolute;
+	/*position: absolute;*/
+float: left;
+/*clear: both;*/
 	overflow: auto;
-	top: 0px;
+	top: 30px;
 	left: 0px;
 	width: 200px;
 	height: 97%;
 	background: #eee;
 	border: 1px solid #dde;
-	border-right: none;
+	border-right: 5px;
 	font-size: 1.1em;
 	font-weight: bold;
 	text-transform: capitalize;
 	padding: .33em .75em .33em 1em;
-	border-radius: 1em 0 0 1em;
-	-moz-border-radius: 1em 0 0 1em;
+	border-radius: 0 1em 1em 0;
+	-moz-border-radius: 0 1em 1em 0;
 	-webkit-border-top-left-radius: 1em;
 	-webkit-border-bottom-left-radius: 1em;
 	color: #444;

@@ -21,6 +21,7 @@
 
 		$misc->printTrail('schema');
 		$misc->printTabs('schema', 'sequences');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		// Get all sequences
@@ -145,6 +146,7 @@
 
 		$misc->printTrail('sequence');
 		$misc->printTitle($lang['strproperties'],'pg.sequence');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		// Fetch the sequence information
@@ -301,6 +303,7 @@
 		if ($confirm) {
 			$misc->printTrail('sequence');
 			$misc->printTitle($lang['strdrop'],'pg.sequence.drop');
+			$misc->printBrowser();
 			$misc->printMsg($msg);
 			
 			echo "<form action=\"sequences.php\" method=\"post\">\n";
@@ -375,6 +378,7 @@
 
 		$misc->printTrail('schema');
 		$misc->printTitle($lang['strcreatesequence'],'pg.sequence.create');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		echo "<form action=\"sequences.php\" method=\"post\">\n";
@@ -502,6 +506,7 @@
 
 		$misc->printTrail('sequence');
 		$misc->printTitle($lang['strsetval'], 'pg.sequence');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		// Fetch the sequence information
@@ -573,6 +578,7 @@
 
 		$misc->printTrail('sequence');
 		$misc->printTitle($lang['stralter'], 'pg.sequence.alter');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		// Fetch the sequence information
