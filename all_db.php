@@ -22,6 +22,7 @@
 		if ($confirm) {
 			$misc->printTrail('database');
 			$misc->printTitle($lang['stralter'], 'pg.database.alter');
+			$misc->printBrowser();
 
 			echo "<form action=\"all_db.php\" method=\"post\">\n";
 			echo "<table>\n";
@@ -90,8 +91,9 @@
 
 		if ($confirm) {
 
-            $misc->printTrail('database');
-            $misc->printTitle($lang['strdrop'], 'pg.database.drop');
+		$misc->printTrail('database');
+		$misc->printTitle($lang['strdrop'], 'pg.database.drop');
+		$misc->printBrowser();
 
 	        echo "<form action=\"all_db.php\" method=\"post\">\n";
             //If multi drop
@@ -151,6 +153,7 @@
 
 		$misc->printTrail('server');
 		$misc->printTitle($lang['strcreatedatabase'], 'pg.database.create');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		if (!isset($_POST['formName'])) $_POST['formName'] = '';
@@ -297,6 +300,7 @@
 
 		$misc->printTrail('server');
 		$misc->printTabs('server','export');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		echo "<form action=\"dbexport.php\" method=\"post\">\n";
@@ -346,6 +350,7 @@
 
 		$misc->printTrail('server');
 		$misc->printTabs('server','databases');
+		$misc->printBrowser();
 		$misc->printMsg($msg);
 
 		$databases = $data->getDatabases();

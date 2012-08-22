@@ -77,6 +77,7 @@ th.required {text-decoration: underline}
 	padding: 0;
 	text-align: left;
 }
+.topbar table, .trail table {margin-left: 100px;}
 .topbar a, .trail a, body.browser a, th.data a {
 	color: #a8aac2;
 }
@@ -163,7 +164,7 @@ pre {font-size: 110%}
 pre.data {font-size: 100%}
 pre.error {font-size: 120%}
 
-.intro li {font-weight: bold}
+.intro li {font-weight: bold; position: relative; left: 13px;}
 .ac_field {
 	border:1px solid #363330;
 	background: url('../../images/themes/cappuccino/openListe.png') no-repeat right;
@@ -194,4 +195,40 @@ div.logo a {
 	display: block;
 	height: 100%;
 	color: transparent;
+}
+
+#browser-button {
+        position: absolute;
+        top: 8px;
+        width: 70px;
+        left: 0px;
+        cursor: pointer;
+        background: #eee;
+        border: 1px solid #dde;
+        border-left: none;
+        font-size: 1.1em;
+        text-transform: capitalize;
+        padding: .33em .75em .33em 1em;
+	margin: 0px;
+        border-radius: 0 1em 1em 0;
+        -moz-border-radius: 0 1em 1em 0;
+        -webkit-border-top-right-radius: 1em;
+        -webkit-border-bottom-right-radius: 1em;
+}
+
+.browser-visible {
+        /*position: absolute;*/
+        float: left;
+        overflow: auto;
+        top: 30px;
+        left: 0px;
+        width: 200px;
+        min-height: 400px;
+        max-height: 650px;
+        padding: 0px;
+	margin: 0px 5px 0px 0px;
+}
+
+.browser-invisible {
+        display: none;
 }

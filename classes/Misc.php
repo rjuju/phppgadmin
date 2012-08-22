@@ -610,7 +610,7 @@ function toggle(){
 ?>
 
         <div class="logo"><a href="intro.php" target="detail">PhpPgAdmin</a></div>
-        <div class="refreshTree"><a href="browser.php" target="browser" ><img src="<?php echo $this->icon('Refresh'); ?>" alt="title="<?php echo $lang['strrefresh']; ?>" /></a></div>
+        <div class="refreshTree"><a href="browser.php" ><img src="<?php echo $this->icon('Refresh'); ?>" alt="title="<?php echo $lang['strrefresh']; ?>" /></a></div>
 <script type="text/javascript">
 
 webFXTreeConfig.rootIcon                = "<?php echo $this->icon('Servers') ?>";

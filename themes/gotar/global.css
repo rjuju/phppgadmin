@@ -122,6 +122,7 @@ td.opbutton1 a, td.opbutton2 a {
 	padding-right:6px;
 }
 .topbar { border: 0 }
+.topbar table, .trail table {margin-left: 85px;}
 .topbar, .topbar *, .trail, .tab, .crumb {
 	border: 0;
 	background: #336;
@@ -217,7 +218,7 @@ pre.error {
 	font-family: monospace;
 	font-size: 120%;
 }
-.intro li {font-weight: bold}
+.intro li {font-weight: bold;position: relative; left: 13px;}
 .ac_field {border:1px solid #D9D95F}
 .bottom_link {
 	color: #004 !important;
@@ -245,3 +246,40 @@ div.logo a {
 	height: 100%;
 	color: transparent:
 }
+
+#browser-button {
+        position: absolute;
+        top: 8px;
+        width: 60px;
+        left: 0px;
+        cursor: pointer;
+        background: #eee;
+        border: 1px solid #dde;
+        border-left: none;
+        font-size: 1.1em;
+        text-transform: capitalize;
+        padding: .33em .75em .33em 1em;
+        margin: 0px;
+        border-radius: 0 1em 1em 0;
+        -moz-border-radius: 0 1em 1em 0;
+        -webkit-border-top-right-radius: 1em;
+        -webkit-border-bottom-right-radius: 1em;
+}
+
+.browser-visible {
+        /*position: absolute;*/
+        float: left;
+        overflow: auto;
+        top: 30px;
+        left: 0px;
+        width: 200px;
+        min-height: 400px;
+        max-height: 650px;
+        padding: 0px;
+        margin: 0px 5px 0px 0px;
+}
+
+.browser-invisible {
+        display: none;
+}
+

@@ -134,9 +134,7 @@ td.opbutton2 {
 	text-align: center;
 }
 .topbar {border: 2px solid #CECF9C;}
-.topbar table{
-	padding-left: 95px;
-}
+.topbar table{padding-left: 75px;}
 .topbar, .topbar * {
 	background-color: #CECF9C;
 }
@@ -231,7 +229,7 @@ pre.error {
 	font-family: "Lucida Console", "Courier New", "DejaVu Sans Mono", monospace;
 	font-size: 120%;
 }
-.intro li {font-weight: bold}
+.intro li {font-weight: bold; position: relative; left: 13px;}
 .ac_field {border:1px solid #D9D95F}
 .bottom_link {
 	background: #eee;
@@ -271,55 +269,35 @@ div.logo a {
 #browser-button {
 	position: absolute;
 	top: 3px;
-	width: 70px;
+	width: 60px;
 	left: 0px;
 	cursor: pointer;
 	background: #eee;
 	border: 1px solid #dde;
 	border-left: none;
 	font-size: 1.1em;
-	font-weight: bold;
 	text-transform: capitalize;
 	padding: .33em .75em .33em 1em;
+	margin: 0px;
 	border-radius: 0 1em 1em 0;
-/*	-moz-border-radius: 1em 0 1em 0;*/
-/*	-webkit-border-top-right-radius: 1em;*/
-/*	-webkit-border-bottom-right-radius: 1em;*/
-	color: #444;
-}
-
-#browser-button.browser-visible {
-	left: 210px;
-}
-
-#browser-button.browser-invisible {
-	left: 210px;
+	-moz-border-radius: 0 1em 1em 0;
+	-webkit-border-top-right-radius: 1em;
+	-webkit-border-bottom-right-radius: 1em;
 }
 
 .browser-visible {
 	/*position: absolute;*/
-float: left;
-/*clear: both;*/
+	float: left;
 	overflow: auto;
 	top: 30px;
 	left: 0px;
 	width: 200px;
-	height: 97%;
-	background: #eee;
-	border: 1px solid #dde;
-	border-right: 5px;
-	font-size: 1.1em;
-	font-weight: bold;
-	text-transform: capitalize;
-	padding: .33em .75em .33em 1em;
-	border-radius: 0 1em 1em 0;
-	-moz-border-radius: 0 1em 1em 0;
-	-webkit-border-top-left-radius: 1em;
-	-webkit-border-bottom-left-radius: 1em;
-	color: #444;
+	min-height: 400px;
+	max-height: 650px;
+	padding: 0px;
+	margin: 0px 5px 0px 0px;
 }
 
 .browser-invisible {
-	position: absolute;
-	left: -400px;	
+	display: none;
 }
